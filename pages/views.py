@@ -5,7 +5,14 @@ from .models import *
 
 
 def pages(request):
-    return render(request, 'pages/pages.html')
+    return render(request, 'pages/dashboard.html')
+
+
+def all_categories(request):
+	categories = CategorieUrl.objects.all()
+	args={'categories': categories}
+	return render(request, 'pages/all-categories.html', args)
+
 
 def cat_urls(request, cat_urls):
 	urls = str(request.get_full_path())

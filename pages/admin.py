@@ -6,3 +6,4 @@ admin.site.site_title = "Admin Portal"
 
 
 admin.site.register(CategorieUrl)
+admin.site.register(Product)

@@ -8,11 +8,11 @@ import ast
 # ---------------------------------------------------------------------------
 def parsePrice(p):
     if '-' in p:
-        pl = p.split(' - ')
+        pl = p.replace(',', '').split(' - ')
         price = {'min': float(pl[0]), 'max': float(pl[1])}
         return price
     else:
-        pf = float(p.strip())
+        pf = float(p.replace(',', '').strip())
         price = {'min': pf, 'max': pf}
         return price
 # ---------------------------------------------------------------------------

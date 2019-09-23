@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from datetime import datetime
 
 # CATEGORIE URL'S
 class CategorieUrl(models.Model):
@@ -22,3 +23,9 @@ class Product(models.Model):
 
 	def __str__(self):
 		return str(self.pk) + ' - ' + self.productId + ' - ' + str(self.totSalesCount)
+
+# DAILY SALES RECORD
+class dailySale(models.Model):
+	date = models.DateField(default=datetime.now)
+	quantitySold = models.IntegerField(default=0)
+	product = models.ForeignKey(Product, on_delete=models.CASCADE)

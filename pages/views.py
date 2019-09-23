@@ -67,3 +67,12 @@ def save_products(request, products):
 
 	args={'products':'Saved'}
 	return render(request, 'pages/save_products.html', args)
+
+def products_srtd_order(request):
+	min_order_count = 1000
+	products = Product.objects.filter(totSalesCount__gte=min_order_count).order_by('-totSalesCount')
+	args={
+		'products': products,
+		'min_order_count': min_order_count,
+	}
+	return render(request, 'pages/products_srtd_order.html', args)

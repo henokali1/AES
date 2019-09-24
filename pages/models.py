@@ -20,12 +20,26 @@ class Product(models.Model):
 	maxPrice = models.FloatField(default=0.0)
 	storeName = models.CharField(max_length=250, default="")
 	totSalesCount = models.IntegerField(default=0.0)
+	imageUrl = models.URLField(default='')
+	logisticsReliability = models.CharField(max_length=100, default="")
+	sellerDsSupplier = models.BooleanField(default=False)
+	storeUrl = models.URLField(default='')
 
 	def __str__(self):
 		return str(self.pk) + ' - ' + self.productId + ' - ' + str(self.totSalesCount)
 
 # DAILY SALES RECORD
-class dailySale(models.Model):
+class DailySale(models.Model):
 	date = models.DateField(default=datetime.now)
 	quantitySold = models.IntegerField(default=0)
 	product = models.ForeignKey(Product, on_delete=models.CASCADE)
+
+	def __str__(self):
+		return str(self.pk) + ' - ' + str(self.quantitySold)
+
+# CURRENT COOKIE
+class Cookie(models.Model):
+	cookie = models.TextField(default='')
+
+	def __str__(self):
+		return 'Current Cookie'

@@ -150,6 +150,72 @@ def update_daily_sales_record(request):
 	args = {}
 	return render(request, 'pages/update-daily-sales-record.html', args)
 
-def analyze(request):
+def product_filter(request):
 	args = {}
-	return render(request, 'pages/analyze.html', args)
+	if request.method == 'POST':
+		rating = request.POST['rating']
+		min_price = request.POST['min_price']
+		max_price = request.POST['max_price']
+		min_tot_sales = request.POST['min_tot_sales']
+		max_tot_sales = request.POST['max_tot_sales']
+		log_reliability = request.POST['log_reliability']
+		
+		args['rating'] = rating
+		args['min_price'] = min_price
+		args['max_price'] = max_price
+		args['min_tot_sales'] = min_tot_sales
+		args['max_tot_sales'] = max_tot_sales
+		args['log_reliability'] = log_reliability
+
+		p = Product.objects.all()
+		if rating != '':
+			p = p.filter(rating__gte=rating)
+		if min_price != '':
+			p = p.filter(minPrice__gte=min_price)
+		if max_price != '':
+			p = p.filter(maxPrice__lte=max_price)
+		if min_tot_sales != '':
+			p = p.filter(totSalesCount__gte=min_tot_sales)
+		if max_tot_sales != '':
+			p = p.filter(totSalesCount__lte=max_tot_sales)
+		if log_reliability != 'def':
+			p = p.filter(logisticsReliability=log_reliability)
+
+		args['filtered'] = p.order_by('-totSalesCount')
+		args['tot'] = len(p)
+		return render(request, 'pages/product-filter.html', args)	
+	
+	return render(request, 'pages/product-filter.html', args)
+
+def daily_sales_filter(request):
+	args={}
+	if request.method == 'POST':
+		min_daily_sale = request.POST['min_daily_sale']
+		max_daily_sale = request.POST['max_daily_sale']
+		staring_date = request.POST['staring_date']
+		end_date = request.POST['end_date']
+		min_units_sold = request.POST['min_units_sold']
+		max_units_sold = request.POST['max_units_sold']
+
+		args['min_daily_sale'] = min_daily_sale
+		args['max_daily_sale'] = max_daily_sale
+		args['staring_date'] = staring_date
+		args['end_date'] = end_date
+
+		ds = DailySale.objects.all()
+		if min_daily_sale != '':
+			ds = ds.filter(quantitySold__gte=min_daily_sale)
+		if max_daily_sale != '':
+			ds = ds.filter(quantitySold__lte=max_daily_sale)
+		if staring_date != '':
+			ds = ds.filter(date__gte=staring_date)
+		if end_date != '':
+			ds = ds.filter(date__lte=end_date)
+
+		ds = ds.order_by('-quantitySold')
+		ds = ds.order_by('-date')
+		args['filtered'] = ds
+		args['tot'] = len(ds)
+		return render(request, 'pages/daily-sales-filter.html', args)
+
+	return render(request, 'pages/daily-sales-filter.html', args)

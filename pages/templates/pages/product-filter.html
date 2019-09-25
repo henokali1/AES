@@ -1,0 +1,136 @@
+  <html>
+  <head>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+    	google.charts.load('current', {'packages':['line']});
+      google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+
+      var data = new google.visualization.DataTable();
+      data.addColumn('date', 'Date');
+      data.addColumn('number', 'Product 1');
+      data.addColumn('number', 'Product 2');
+      data.addColumn('number', 'Product 3');
+
+      data.addRows([
+        [new Date("2019-02-01"),  20, 10.8, 12.8],
+        [new Date("2019-02-02"),  0, 10.8, 41.8],
+        [new Date("2019-02-03"),  30.9, 9.5, 32.4],
+        [new Date("2019-02-04"),  25.4,   17, 25.7],
+        [new Date("2019-02-05"),  11.7, 18.8, 10.5],
+        [new Date("2019-02-06"),  11.9, 17.6, 10.4],
+        [new Date("2019-02-07"),   8.8, 13.6,  7.7],
+        [new Date("2019-02-08"),   7.6, 12.3,  9.6],
+        [new Date("2019-02-09"),  12.3, 29.2, 10.6],
+        [new Date("2019-02-10"),  16.9, 12.9, 14.8],
+      	[new Date("2019-02-11"),  20, 10.8, 12.8],
+        [new Date("2019-02-12"),  0, 10.8, 41.8],
+        [new Date("2019-02-13"),  30.9, 9.5, 32.4],
+        [new Date("2019-02-14"),  25.4,   17, 25.7],
+        [new Date("2019-02-15"),  11.7, 18.8, 10.5],
+        [new Date("2019-02-16"),  11.9, 17.6, 10.4],
+        [new Date("2019-02-17"),   8.8, 13.6,  7.7],
+        [new Date("2019-02-18"),   7.6, 12.3,  9.6],
+        [new Date("2019-02-19"),  12.3, 29.2, 10.6],
+        [new Date("2019-02-20"),  16.9, 12.9, 14.8],
+        [new Date("2019-02-21"), 12.8, 30.9, 11.6],
+        [new Date("2019-02-22"),  5.3,  7.9,  4.7],
+        [new Date("2019-02-23"),  6.6,  8.4,  5.2],
+        [new Date("2019-02-24"),  4.8,  6.3,  3.6],
+        [new Date("2019-02-25"),  4.2,  6.2,  3.4]
+      ]);
+
+      var options = {
+        chart: {
+          title: '',
+          subtitle: ''
+        },
+        width: 1500,
+        height: 500
+      };
+
+      var chart = new google.charts.Line(document.getElementById('linechart_material'));
+
+      chart.draw(data, google.charts.Line.convertOptions(options));
+    }
+    
+    </script>
+  </head>
+  <body>
+    <form method="post">
+      {% csrf_token %}
+      <ul>
+        <li>
+          Rating: <input type="number" step="0.01" name="rating" min="1" max="5" value="{{ rating }}">
+        </li>
+        <li>
+          Price(Min): <input type="number" step="0.01" name="min_price" value="{{ min_price }}">
+        </li>
+        <li>
+          Price(Max): <input type="number" step="0.01" name="max_price" value="{{ max_price }}">
+        </li>
+        <li>
+          Totla Sales(Min): <input type="number" step="0.01" name="min_tot_sales" value="{{ min_tot_sales }}">
+        </li>
+        <li>
+          Totla Sales(Max): <input type="number" step="0.01" name="max_tot_sales" value="{{ max_tot_sales }}">
+        </li>
+        <li>
+          Logistics Reliablility:
+          {% if log_reliability == 'H' %}
+          <select name="log_reliability">
+            <option value="def">---------</option>
+            <option selected="selected" value="H">Excellent</option>
+            <option value="M">Average</option>
+            <option value="L">Below average</option>
+            <option value="U">Unknown</option>
+          </select>
+          {% elif log_reliability == 'M' %}
+          <select name="log_reliability">
+            <option value="def">---------</option>
+            <option value="H">Excellent</option>
+            <option selected="selected" value="M">Average</option>
+            <option value="L">Below average</option>
+            <option value="U">Unknown</option>
+          </select>
+          {% elif log_reliability == 'L' %}
+          <select name="log_reliability">
+            <option value="def">---------</option>
+            <option value="H">Excellent</option>
+            <option value="M">Average</option>
+            <option selected="selected" value="L">Below average</option>
+            <option value="U">Unknown</option>
+          </select>
+          {% elif log_reliability == 'U' %}
+          <select name="log_reliability">
+            <option value="def">---------</option>
+            <option value="H">Excellent</option>
+            <option value="M">Average</option>
+            <option value="L">Below average</option>
+            <option selected="selected" value="U">Unknown</option>
+          </select>
+          {% else %}
+          <select name="log_reliability">
+            <option selected="selected" value="def">---------</option>
+            <option value="H">Excellent</option>
+            <option value="M">Average</option>
+            <option value="L">Below average</option>
+            <option value="U">Unknown</option>
+          </select>
+          {% endif %}
+        </li>
+      </ul>
+      <button type="submit">Submit</button>
+    </form>
+    
+
+    <h1>tot: {{ tot }}</h1>
+    {% for i in filtered %}
+    <p>pid={{i.productId}},rating={{i.rating}},min_price={{i.minPrice}},max_price={{i.maxPrice}},Total Sales={{i.totSalesCount}},Logistics Reliability={{i.logisticsReliability}},</p>
+    {% endfor %}
+    
+
+    <div id="linechart_material"></div>
+  </body>
+</html>

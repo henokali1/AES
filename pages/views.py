@@ -149,3 +149,7 @@ def update_daily_sales_record(request):
 			print('Error: ', productId)
 	args = {}
 	return render(request, 'pages/update-daily-sales-record.html', args)
+
+def analyze(request):
+	args = {}
+	return render(request, 'pages/analyze.html', args)

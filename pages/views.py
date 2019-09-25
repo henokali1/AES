@@ -190,19 +190,43 @@ def product_filter(request):
 def daily_sales_filter(request):
 	args={}
 	if request.method == 'POST':
+		rating = request.POST['rating']
+		min_price = request.POST['min_price']
+		max_price = request.POST['max_price']
+		min_tot_sales = request.POST['min_tot_sales']
+		max_tot_sales = request.POST['max_tot_sales']
+		log_reliability = request.POST['log_reliability']
+
 		min_daily_sale = request.POST['min_daily_sale']
 		max_daily_sale = request.POST['max_daily_sale']
 		staring_date = request.POST['staring_date']
 		end_date = request.POST['end_date']
-		min_units_sold = request.POST['min_units_sold']
-		max_units_sold = request.POST['max_units_sold']
 
+		args['rating'] = rating
+		args['min_price'] = min_price
+		args['max_price'] = max_price
+		args['min_tot_sales'] = min_tot_sales
+		args['max_tot_sales'] = max_tot_sales
+		args['log_reliability'] = log_reliability
+		
 		args['min_daily_sale'] = min_daily_sale
 		args['max_daily_sale'] = max_daily_sale
 		args['staring_date'] = staring_date
 		args['end_date'] = end_date
 
 		ds = DailySale.objects.all()
+		if rating != '':
+			ds = ds.filter(product__rating__gte=rating)
+		if min_price != '':
+			ds = ds.filter(product__minPrice__gte=min_price)
+		if max_price != '':
+			ds = ds.filter(product__maxPrice__lte=max_price)
+		if min_tot_sales != '':
+			ds = ds.filter(product__totSalesCount__gte=min_tot_sales)
+		if max_tot_sales != '':
+			ds = ds.filter(product__totSalesCount__lte=max_tot_sales)
+		if log_reliability != 'def':
+			ds = ds.filter(product__logisticsReliability=log_reliability)
 		if min_daily_sale != '':
 			ds = ds.filter(quantitySold__gte=min_daily_sale)
 		if max_daily_sale != '':
@@ -213,7 +237,7 @@ def daily_sales_filter(request):
 			ds = ds.filter(date__lte=end_date)
 
 		ds = ds.order_by('-quantitySold')
-		ds = ds.order_by('-date')
+		# ds = ds.order_by('-date')
 		args['filtered'] = ds
 		args['tot'] = len(ds)
 		return render(request, 'pages/daily-sales-filter.html', args)

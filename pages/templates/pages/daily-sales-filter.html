@@ -132,6 +132,17 @@
         <li>
           End Date:<input type="date" name="end_date" value="{{ end_date }}">
         </li>
+        <li>
+          Sort By: 
+          <select name="sort_by">
+            <option selected="selected" value="def">---------</option>
+            <option value="rating">Rating</option>
+            <option value="minPrice">Price</option>
+            <option value="totSalesCount">Total Sales Count</option>
+            <option value="date">Date</option>
+            <option value="quantitySold">Daily Sale</option>
+          </select>
+        </li>
       </ul>
       <button type="submit">Submit</button>
     </form>
@@ -139,7 +150,7 @@
 
     <h1>tot: {{ tot }}</h1>
     {% for i in filtered %}
-    <p>pid={{i.product.productId}}, quantitySold={{i.quantitySold}},date={{i.date}},rating={{i.product.rating}}min_price={{i.product.minPrice}},max_price={{i.product.maxPrice}},Total Sales={{i.product.totSalesCount}},Logistics Reliability={{i.product.logisticsReliability}}</p>
+    <p>pid={{i.product.productId}}, quantitySold={{i.quantitySold}},date={{i.date}},rating={{i.product.rating}}min_price={{i.product.minPrice}},max_price={{i.product.maxPrice}},Total Sales={{i.product.totSalesCount}},Logistics Reliability={{i.product.logisticsReliability}},Title=<a href="https://www.aliexpress.com/item/{{i.product.productId}}.html" target="_blank">{{i.product.productTitle|truncatechars:35}}</a></p>
     {% endfor %}
     
 

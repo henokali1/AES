@@ -201,6 +201,7 @@ def daily_sales_filter(request):
 		max_daily_sale = request.POST['max_daily_sale']
 		staring_date = request.POST['staring_date']
 		end_date = request.POST['end_date']
+		sort_by = request.POST['sort_by']
 
 		args['rating'] = rating
 		args['min_price'] = min_price
@@ -213,6 +214,7 @@ def daily_sales_filter(request):
 		args['max_daily_sale'] = max_daily_sale
 		args['staring_date'] = staring_date
 		args['end_date'] = end_date
+		args['sort_by'] = sort_by
 
 		ds = DailySale.objects.all()
 		if rating != '':
@@ -236,8 +238,11 @@ def daily_sales_filter(request):
 		if end_date != '':
 			ds = ds.filter(date__lte=end_date)
 
-		ds = ds.order_by('-quantitySold')
-		# ds = ds.order_by('-date')
+		if sort_by == 'date':
+			ds = ds.order_by('-date')
+		else:
+			ds = ds.order_by('-quantitySold')
+
 		args['filtered'] = ds
 		args['tot'] = len(ds)
 		return render(request, 'pages/daily-sales-filter.html', args)

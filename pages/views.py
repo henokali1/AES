@@ -7,6 +7,7 @@ import requests
 import time
 import json
 import datetime
+from statistics import variance, mean
 
 # Helper Functions
 # ---------------------------------------------------------------------------
@@ -19,6 +20,19 @@ def parsePrice(p):
         pf = float(p.replace(',', '').strip())
         price = {'min': pf, 'max': pf}
         return price
+
+def calcMeanVar(productId):
+	ds = DailySale.objects.filter(product__productId=productId)
+	dsl = []
+
+	for i in ds:
+		dsl.append(i.quantitySold) 
+
+	res = {
+		'mean': round(mean(dsl)),
+		'variance': round(variance(dsl)),
+	}
+	return res
 # ---------------------------------------------------------------------------
 
 def pages(request):

@@ -24,6 +24,9 @@ class Product(models.Model):
 	logisticsReliability = models.CharField(max_length=100, default="")
 	sellerDsSupplier = models.BooleanField(default=False)
 	storeUrl = models.URLField(default='')
+	avgDailySale = models.FloatField(default=0.0)
+	dailySaleVariance = models.FloatField(default=11111.0)
+
 
 	def __str__(self):
 		return str(self.pk) + ' - ' + self.productId + ' - ' + str(self.totSalesCount)
@@ -33,8 +36,6 @@ class DailySale(models.Model):
 	date = models.DateField(default=datetime.now)
 	quantitySold = models.IntegerField(default=0)
 	product = models.ForeignKey(Product, on_delete=models.CASCADE)
-	avgDailySale = models.FloatField(default=0.0)
-	dailySaleVariance = models.FloatField(default=11111.0)
 
 	def __str__(self):
 		return str(self.pk) + ' - ' + str(self.quantitySold)

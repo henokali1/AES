@@ -120,6 +120,18 @@
           </select>
           {% endif %}
         </li>
+        <li>
+          Min Average Daily Sale:<input type="numbre" name="min_avg_daily_sale" value="{{ min_avg_daily_sale }}">
+        </li>
+        <li>
+          Max Average Daily Sale:<input type="numbre" name="max_avg_daily_sale" value="{{ max_avg_daily_sale }}">
+        </li>
+        <li>
+          Min Variance(Daily Sale):<input type="numbre" name="min_variance_daily_sale" value="{{ min_variance_daily_sale }}">
+        </li>
+        <li>
+          Max Variance(Daily Sale):<input type="numbre" name="max_variance_daily_sale" value="{{ max_variance_daily_sale }}">
+        </li>
       </ul>
       <button type="submit">Submit</button>
     </form>
@@ -127,7 +139,7 @@
 
     <h1>tot: {{ tot }}</h1>
     {% for i in filtered %}
-    <p>pid={{i.productId}},rating={{i.rating}},min_price={{i.minPrice}},max_price={{i.maxPrice}},Total Sales={{i.totSalesCount}},Logistics Reliability={{i.logisticsReliability}},</p>
+    <p>pid={{i.productId}},rating={{i.rating}},min_price={{i.minPrice}},max_price={{i.maxPrice}},Total Sales={{i.totSalesCount}},Logistics Reliability={{i.logisticsReliability}},Avg Daily Sale={{i.avgDailySale}},Variance={{i.dailySaleVariance}}</p>
     {% endfor %}
     
 

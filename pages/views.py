@@ -25,12 +25,52 @@ def calcMeanVar(productId):
 	ds = DailySale.objects.filter(product__productId=productId)
 	dsl = []
 
-	for i in ds:
-		dsl.append(i.quantitySold) 
+	lds = len(ds)
+	if lds == 0:
+		res = {
+			'mean': 0.0,
+			'variance': 99999999.0,
+		}
+	elif lds == 1:
+		res = {
+			'mean': round(mean(dsl), 1),
+			'variance': 99999999.0,
+		}
+	else:
+		for i in ds:
+			dsl.append(i.quantitySold) 
+
+		res = {
+			'mean': round(mean(dsl), 1),
+			'variance': round(variance(dsl), 1),
+		}
+	return res
+
+
+def get_shipping_info(productId):
+	headers = {
+		'Origin': 'https://hz.aliexpress.com',
+		'Referer': 'https://hz.aliexpress.com/',
+		'Sec-Fetch-Mode': 'cors',
+		'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36'
+	}
+	minPrice=0
+	maxPrice=0
+
+	url = 'https://www.aliexpress.com/aeglodetailweb/api/logistics/freight?productId={}&count=1&minPrice={}&maxPrice={}&sendGoodsCountry=US&country=US&provinceCode=&cityCode=&tradeCurrency=USD&userScene=PC_DETAIL'.format(productId, minPrice, maxPrice)
+	t = time.time()
+	response = requests.get(url, headers=headers)
+	tt = round(time.time() - t, 1)
+	print('Request compleated in {} secs'.format(tt))
+
+	data = json.loads(response.text)['body']["freightResult"][0]
 
 	res = {
-		'mean': round(mean(dsl)),
-		'variance': round(variance(dsl)),
+		'shipping_price': data['freightAmount']['value'],
+		'shipping_company': data['company'],
+		'commitDay': data['commitDay'],
+		'estimated_delivery': data['time'],
+		'tracking': data['tracking'],
 	}
 	return res
 # ---------------------------------------------------------------------------
@@ -105,10 +145,12 @@ def update_daily_sales_record(request):
 	t = time.time()
 	c = Cookie.objects.all()[0].cookie
 
-	min_order_count = 1000
+	min_order_count = 500
 	products = Product.objects.filter(totSalesCount__gte=min_order_count).order_by('-totSalesCount')
-
+	totProds = len(products)
+	cntr = 0
 	for i in products:
+		cntr += 1
 		tt = time.time()
 		productId = i.productId
 		print(productId)
@@ -157,10 +199,25 @@ def update_daily_sales_record(request):
 					print('Product Sales Data Saved.')
 				else:
 					print('Product Sales Data Already Exists')
-			print('tt Time:', time.time()-tt)
-			print('Tot Time:', time.time()-t)
+
+			
+			try:
+				mv = calcMeanVar(productId)
+				Product.objects.filter(productId=productId).update(
+						avgDailySale=mv['mean'],
+						dailySaleVariance=mv['variance']
+					)
+				print('M&V Updated: ', mv)
+			except:
+				print('Couldn\'t update M&V 	', productId)
+			tElapsed = round((time.time()-t)/60.0, 2)
+			singTime = round(time.time()-tt, 2)
+			remProducts = totProds - cntr
+			print('Products remaining: {},	Elapsed Time: {} mins,	CPPT: {} sec'.format(remProducts, tElapsed, singTime))
+		
 		except:
 			print('Error: ', productId)
+
 	args = {}
 	return render(request, 'pages/update-daily-sales-record.html', args)
 
@@ -174,6 +231,11 @@ def product_filter(request):
 		max_tot_sales = request.POST['max_tot_sales']
 		log_reliability = request.POST['log_reliability']
 		
+		min_avg_daily_sale = request.POST['min_avg_daily_sale']
+		max_avg_daily_sale = request.POST['max_avg_daily_sale']
+		min_variance_daily_sale = request.POST['min_variance_daily_sale']
+		max_variance_daily_sale = request.POST['max_variance_daily_sale']
+
 		args['rating'] = rating
 		args['min_price'] = min_price
 		args['max_price'] = max_price
@@ -181,6 +243,11 @@ def product_filter(request):
 		args['max_tot_sales'] = max_tot_sales
 		args['log_reliability'] = log_reliability
 
+		args['min_avg_daily_sale'] = min_avg_daily_sale
+		args['max_avg_daily_sale'] = max_avg_daily_sale
+		args['min_variance_daily_sale'] = min_variance_daily_sale
+		args['max_variance_daily_sale'] = max_variance_daily_sale
+		
 		p = Product.objects.all()
 		if rating != '':
 			p = p.filter(rating__gte=rating)
@@ -194,6 +261,15 @@ def product_filter(request):
 			p = p.filter(totSalesCount__lte=max_tot_sales)
 		if log_reliability != 'def':
 			p = p.filter(logisticsReliability=log_reliability)
+
+		if min_avg_daily_sale != '':
+			p = p.filter(avgDailySale__gte=min_avg_daily_sale)
+		if max_avg_daily_sale != '':
+			p = p.filter(avgDailySale__lte=max_avg_daily_sale)
+		if min_variance_daily_sale != '':
+			p = p.filter(dailySaleVariance__gte=min_variance_daily_sale)
+		if max_tot_sales != '':
+			p = p.filter(dailySaleVariance__lte=max_tot_sales)
 
 		args['filtered'] = p.order_by('-totSalesCount')
 		args['tot'] = len(p)

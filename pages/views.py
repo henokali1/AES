@@ -73,6 +73,42 @@ def get_shipping_info(productId):
 		'tracking': data['tracking'],
 	}
 	return res
+
+def getShippingCountry(st):
+    res = []
+    di=ast.literal_eval(st)
+    for i in di:
+        res.append(i['propertyValueDisplayName'])
+    return res
+
+def key_extractor(obj_str, s, e):
+    return obj_str[obj_str.index(s)+len(s):obj_str.index(e)]
+
+# t=time.time()
+# # Collect and parse first page
+# page = requests.get('https://www.aliexpress.com/item/{}.html'.format(productId))
+# tt=time.time()
+# ttt = round((tt - t), 1)
+
+# print('Request compleated in {} seconds'.format(ttt))
+
+# d = page.text
+# total_orders = d[d.index('"tradeCount"')+13:d.index('"tradeCountUnit"')-1]
+
+# product_rating = key_extractor(d, '{"averageStar":"', '","averageStarRage":"')
+# price_range = key_extractor(d, '"formatedActivityPrice":"', '","formatedPrice":')
+# shipping_countries = getShippingCountry(key_extractor(d, '"Ships From","skuPropertyValues":[', ']}],"skuPriceList":[{'))
+# stock_available = key_extractor(d, ',"totalAvailQuantity":', '},"buyerProtectionModule":{"')
+# store_rating = key_extractor(d, ',"positiveRate":"', '%","productId":')
+# product_has_video = 'video' in d
+
+# print('total_orders',total_orders)
+# print('product_rating',product_rating)
+# print('price_range',price_range)
+# print('shipping_countries', shipping_countries)
+# print('stock_available', stock_available)
+# print('store_rating', store_rating)
+# print('product_has_video',product_has_video)
 # ---------------------------------------------------------------------------
 
 def pages(request):

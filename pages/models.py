@@ -46,3 +46,13 @@ class Cookie(models.Model):
 
 	def __str__(self):
 		return 'Current Cookie'
+
+# ERRORS
+class Err(models.Model):
+	productId = models.CharField(max_length=250, default="")
+	file_name = models.CharField(max_length=250, default="")
+	func_name = models.CharField(max_length=250, default="")
+	err = models.TextField(default='')
+
+	def __str__(self):
+		return str(self.productId) + ' - ' + str(self.func_name)

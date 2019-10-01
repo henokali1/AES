@@ -20,6 +20,11 @@ class Product(models.Model):
 	maxPrice = models.FloatField(default=0.0)
 	storeName = models.CharField(max_length=250, default="")
 	totSalesCount = models.IntegerField(default=0.0)
+	shippingCountries = models.CharField(max_length=250, default="")
+	stockAvailable = models.IntegerField(default=0.0)
+	storeRating = models.FloatField(default=0.0)
+	productListingHasVideo = models.BooleanField(default=False)
+	
 	imageUrl = models.URLField(default='')
 	logisticsReliability = models.CharField(max_length=100, default="")
 	sellerDsSupplier = models.BooleanField(default=False)

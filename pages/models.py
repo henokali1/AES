@@ -32,6 +32,12 @@ class Product(models.Model):
 	avgDailySale = models.FloatField(default=0.0)
 	dailySaleVariance = models.FloatField(default=11111.0)
 
+	shippingPrice = models.FloatField(default=0.0)
+	shippingCompany = models.CharField(max_length=250, default="")
+	commitDay = models.IntegerField(default=0)
+	estimatedDeliveryDayMin = models.IntegerField(default=0)
+	estimatedDeliveryDayMax = models.IntegerField(default=0)
+	trackingAvailable = models.BooleanField(default=False)
 
 	def __str__(self):
 		return str(self.pk) + ' - ' + self.productId + ' - ' + str(self.totSalesCount)
@@ -58,6 +64,8 @@ class Err(models.Model):
 	file_name = models.CharField(max_length=250, default="")
 	func_name = models.CharField(max_length=250, default="")
 	err = models.TextField(default='')
+	created_at = models.DateTimeField(auto_now_add=True)
+	updated_at = models.DateTimeField(auto_now=True)
 
 	def __str__(self):
 		return str(self.productId) + ' - ' + str(self.func_name)

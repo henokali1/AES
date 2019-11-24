@@ -150,7 +150,7 @@
 
     <h1>tot: {{ tot }}</h1>
     {% for i in filtered %}
-    <p>pid={{i.product.productId}}, quantitySold={{i.quantitySold}},date={{i.date}},rating={{i.product.rating}}min_price={{i.product.minPrice}},max_price={{i.product.maxPrice}},Total Sales={{i.product.totSalesCount}},Logistics Reliability={{i.product.logisticsReliability}},Title=<a href="https://www.aliexpress.com/item/{{i.product.productId}}.html" target="_blank">{{i.product.productTitle|truncatechars:35}}</a></p>
+    <p>quantitySold={{i.quantitySold}},date={{i.date}},rating={{i.product.rating}}min_price={{i.product.minPrice}},max_price={{i.product.maxPrice}},Total Sales={{i.product.totSalesCount}},Logistics Reliability={{i.product.logisticsReliability}},Title=<a href="https://www.aliexpress.com/item/{{i.product.productId}}.html" target="_blank">{{i.product.productTitle|truncatechars:35}}</a></p>
     {% endfor %}
     
 

@@ -1,6 +1,16 @@
+import os
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'AliExpressScraper.settings')
+
+import django
+django.setup()
+from django.core.wsgi import get_wsgi_application
+from pages.models import *
+
 import requests
 import time
 import json
+import concurrent.futures
+from pages.models import *
 
 
 def get_shipping_info(productId):
@@ -27,11 +37,26 @@ def get_shipping_info(productId):
         'commitDay': data['commitDay'],
         'estimatedDelivery': data['time'],
         'trackingAvailable': data['tracking'],
+        'estimatedDeliveryDayMax': int(data['time'].split('-')[1]),
+        'estimatedDeliveryDayMin':int(data['time'].split('-')[0]),
     }
-
+    print(res)
+    Product.objects.filter(productId=productId).update(
+        shippingPrice = data['freightAmount']['value'],
+        shippingCompany = data['company'],
+        commitDay = data['commitDay'],
+        estimatedDeliveryDayMax = int(data['time'].split('-')[1]),
+        estimatedDeliveryDayMin = int(data['time'].split('-')[0]),
+        trackingAvailable = data['tracking'],
+        )
     return res
 
-si = get_shipping_info("33037874102")
-for i in si.keys():
-    print(i, si[i])
+# si = get_shipping_info("33037874102")
+# for i in si.keys():
+#     print(i, si[i])
 
+with concurrent.futures.ThreadPoolExecutor() as executor:
+    po = Product.objects.all().values_list('productId')
+    productIds = [i[0] for i in po]
+
+    results = executor.map(get_shipping_info, productIds)

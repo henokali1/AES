@@ -39,6 +39,8 @@ class Product(models.Model):
 	estimatedDeliveryDayMax = models.IntegerField(default=0)
 	trackingAvailable = models.BooleanField(default=False)
 
+	nums = models.FloatField(default=0.0)
+
 	def __str__(self):
 		return str(self.pk) + ' - ' + self.productId + ' - ' + str(self.totSalesCount)
 

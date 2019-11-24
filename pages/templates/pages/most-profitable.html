@@ -1,0 +1,20 @@
+  <html>
+  <head>
+  </head>
+  <body>
+    <form method="post">
+      {% csrf_token %}
+      <ul>
+        <li>
+          Min AVG Daily Sale : <input type="number" name="min_avg_daily_sale" value="{{ min_avg_daily_sale }}" required>
+          <button type="submit">Submit</button>
+        </li>
+      </ul>
+      <h1>Tot: {{ tot }}</h1>
+      <br>
+      {% for product in products %}
+      <p>${{product.nums}}, <a href="https://www.aliexpress.com/item/{{product.productId}}.html" target="_blank">{{product.productTitle}}</a></p>
+      {% endfor %}
+    </form>
+  </body>
+</html>

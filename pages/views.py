@@ -139,7 +139,7 @@ def save_products(request, products):
 	return render(request, 'pages/save_products.html', args)
 
 def products_srtd_order(request):
-	min_order_count = 1000
+	min_order_count = 50
 	products = Product.objects.filter(totSalesCount__gte=min_order_count).order_by('-totSalesCount')
 	args={
 		'products': products,
@@ -226,9 +226,10 @@ def daily_sales_helper(productId):
 
 def update_daily_sales_record(request):
 	t = time.time()
-	
-	min_order_count = 500
+	min_order_count = 50
 	products = Product.objects.filter(totSalesCount__gte=min_order_count).values_list('productId')
+	# products = Product.objects.filter(totSalesCount=0.0).values_list('productId')
+	# products = Product.objects.all().values_list('productId')
 	product_ids = [i[0] for i in products]
 	totProds = len(product_ids)
 	cntr = 0
@@ -290,7 +291,7 @@ def product_filter(request):
 		if max_tot_sales != '':
 			p = p.filter(dailySaleVariance__lte=max_tot_sales)
 
-		args['filtered'] = p.order_by('-totSalesCount')
+		args['filtered'] = p.order_by('-avgDailySale')
 		args['tot'] = len(p)
 		return render(request, 'pages/product-filter.html', args)	
 	
@@ -357,3 +358,27 @@ def daily_sales_filter(request):
 		return render(request, 'pages/daily-sales-filter.html', args)
 
 	return render(request, 'pages/daily-sales-filter.html', args)
+
+def local_server_add_product(request, prds):
+	productIds = prds.split(',')
+	for productId in productIds:
+		if len(productId) > 0:
+			product, created = Product.objects.get_or_create(productId=productId)
+			if created:
+			   print("New Product Added, {}".format(product))
+			else:
+			   print("Product already exists".format(product))
+	args={'prds': prds}
+	return render(request, 'pages/local-server-add-product.html', args)
+
+def most_profitable(request):
+	args={}
+	if request.method == 'POST':
+		min_avg_daily_sale = request.POST['min_avg_daily_sale']
+		products = Product.objects.filter(avgDailySale__gte=min_avg_daily_sale).order_by('-nums')
+		args['products'] = products
+		args['min_avg_daily_sale'] = min_avg_daily_sale
+		args['tot'] = len(products)
+
+		return render(request, 'pages/most-profitable.html', args)
+	return render(request, 'pages/most-profitable.html', args)

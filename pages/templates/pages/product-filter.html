@@ -139,7 +139,7 @@
 
     <h1>tot: {{ tot }}</h1>
     {% for i in filtered %}
-    <p>pid={{i.productId}},rating={{i.rating}},min_price={{i.minPrice}},max_price={{i.maxPrice}},Total Sales={{i.totSalesCount}},Logistics Reliability={{i.logisticsReliability}},Avg Daily Sale={{i.avgDailySale}},Variance={{i.dailySaleVariance}}</p>
+    <p>Avg Daily Sale={{i.avgDailySale}},Variance={{i.dailySaleVariance}},shippingPrice={{i.shippingPrice}},rating={{i.rating}},min_price={{i.minPrice}},max_price={{i.maxPrice}},Total Sales={{i.totSalesCount}},Logistics Reliability={{i.logisticsReliability}},Title=<a href="https://www.aliexpress.com/item/{{i.productId}}.html" target="_blank">{{i.productTitle|truncatechars:35}}</a></p>
     {% endfor %}
     
 

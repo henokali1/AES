@@ -1,5 +1,23 @@
-  <html>
+{% load humanize %}
+<html>
   <head>
+    <style>
+      table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+      }
+
+      td, th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+      }
+
+      tr:nth-child(even) {
+        background-color: #dddddd;
+      }
+    </style>
 <!--     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
     	google.charts.load('current', {'packages':['line']});
@@ -137,12 +155,40 @@
     </form>
     
 
-    <h1>tot: {{ tot }}</h1>
-    {% for i in filtered %}
-    <p>Avg Daily Sale={{i.avgDailySale}},Variance={{i.dailySaleVariance}},shippingPrice={{i.shippingPrice}},rating={{i.rating}},min_price={{i.minPrice}},max_price={{i.maxPrice}},Total Sales={{i.totSalesCount}},Logistics Reliability={{i.logisticsReliability}},Title=<a href="https://www.aliexpress.com/item/{{i.productId}}.html" target="_blank">{{i.productTitle|truncatechars:35}}</a></p>
-    {% endfor %}
+    <h1>Tot: {{ tot }}</h1>
+    
     
 
     <div id="linechart_material"></div>
+
+
+        <table>
+      <tr>
+        <th>AVG Daily Rev</th>
+        <th>COG(min)</th>
+        <th>COG(max)</th>
+        <th>Shipping Price</th>
+        <th>Ratting</th>
+        <th>LR</th>
+        <th>Shipping Duration</th>
+        <th>AVG Daily Sale</th>
+        <th>Product</th>
+        <th>URL</th>
+      </tr>
+      {% for i in filtered %}
+      <tr>
+        <td>${{i.nums|intcomma}}</td>
+        <td>${{i.minPrice}}</td>
+        <td>${{i.maxPrice}}</td>
+        <td>${{i.shippingPrice}}</td>
+        <td>{{i.rating}}</td>
+        <td>{{i.logisticsReliability}}</td>
+        <td>{{i.estimatedDeliveryDayMin}} - {{i.estimatedDeliveryDayMax}} Days</td>
+        <td>{{i.avgDailySale}} Units</td>
+        <td><a href="https://www.aliexpress.com/item/{{i.productId}}.html" target="_blank">{{i.productTitle}}</a></td>
+        <td>https://www.aliexpress.com/item/{{i.productId}}.html</td>
+      </tr>
+        {% endfor %}
+    </table>
   </body>
 </html>

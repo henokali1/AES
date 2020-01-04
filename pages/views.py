@@ -356,7 +356,7 @@ def daily_sales_filter(request):
 		args['filtered'] = ds
 		args['tot'] = len(ds)
 		return render(request, 'pages/daily-sales-filter.html', args)
-
+	args['min_daily_sale'] = 50
 	return render(request, 'pages/daily-sales-filter.html', args)
 
 def local_server_add_product(request, prds):

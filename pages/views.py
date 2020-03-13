@@ -399,15 +399,15 @@ def fbads(request):
 
 	for page in range(301):
 		url = 'https://api.adspy.com/api/ad?createdBetween%5B%5D=01-Jan-2014&createdBetween%5B%5D=13-Mar-2020&orderBy=total_shares&tech%5B%5D=350&countries%5B%5D=US&page={}'.format(page)
+		t = time.time()
+		response = requests.get(url, headers=headers)
+		tt = round(time.time() - t, 1)
+		print('--------------------------------------------------')
+		print('Request compleated in {} secs'.format(tt))
+		print('Remaining Pages: ', 301 - page)
+		print('--------------------------------------------------')
+		data = json.loads(response.text)['data']
 		for i in data:
-			t = time.time()
-			response = requests.get(url, headers=headers)
-			tt = round(time.time() - t, 1)
-			print('--------------------------------------------------')
-			print('Request compleated in {} secs'.format(tt))
-			print('Remaining Pages: ', 301 - page)
-			print('--------------------------------------------------')
-			data = json.loads(response.text)['data']
 			print(i['id'])
 			print(i['createdOn'])
 			print(i['snapshot']['likeNum'])

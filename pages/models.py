@@ -71,3 +71,32 @@ class Err(models.Model):
 
 	def __str__(self):
 		return str(self.productId) + ' - ' + str(self.func_name)
+
+# FB Ads
+class FbAds(models.Model):
+	countryStats = models.TextField(default='')
+	genderStats = models.TextField(default='')
+	ageStats = models.TextField(default='')
+	asy_id = models.TextField(default='')
+	isIg = models.TextField(default='')
+	text = models.TextField(default='')
+	createdOn = models.TextField(default='')
+	privacyScope = models.TextField(default='')
+	minAge = models.TextField(default='')
+	maxAge = models.TextField(default='')
+	actor = models.TextField(default='')
+	countries = models.TextField(default='')
+	genders = models.TextField(default='')
+	snapshot = models.TextField(default='')
+	attachments = models.TextField(default='')
+	comments = models.TextField(default='')
+	adType = models.TextField(default='')
+	linkToAd = models.TextField(default='')
+	mainAttachment = models.TextField(default='')
+	height = models.TextField(default='')
+	likeNum = models.TextField(default='')
+	commentsNum = models.TextField(default='')
+	shareNum = models.TextField(default='')
+
+	def __str__(self):
+		return str(self.pk) + ' - ' + str(self.likeNum)

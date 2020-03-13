@@ -382,3 +382,63 @@ def most_profitable(request):
 
 		return render(request, 'pages/most-profitable.html', args)
 	return render(request, 'pages/most-profitable.html', args)
+
+def fbads(request):
+	headers = {
+		'authority': 'api.adspy.com',
+		'path': '/api/ad?createdBetween%5B%5D=01-Jan-2014&createdBetween%5B%5D=13-Mar-2020&orderBy=total_shares&tech%5B%5D=350&countries%5B%5D=US&page=1',
+		'authorization': 'Bearer wIyQYIkbbw1w6Ojdx12-UWGMaHSVFSVyeYZTMIQlfWvy3xVb0Nk22lTnZK4h1P2AV_8AnDoGtKR_kqA8DbTtaF0QprXQ5B69-AU79VnJw6e2kjbqv5Avwc1ry8Ca1MOPob1J621tO_6odgyODITy0a-9KHGO1wroMAjYJWZReBB1Ur-z7lyH07jqKTIWj2eCfLRPkZDBYfZwOxiOEM0fr5zAVgkfznEHAoXPX3UecXTpA_gytdTgd-wADZs5T9gscnJRSIkyKIIVHt2ZImh-pjAOkv-LmgBDjSsI1sViAktUGtPiisA6yEAGTa_SBKBKMvjSeexLSQRp03spGKgLbGFmlgqqTldh8vlW3o-dmdyCVMA5x7fprRO-0lAdYgvYe7wF6iaysXsKIqH5rObFU9qjDVE4TsT86W4gZ8ceTHtLFssT6k9XW8q0zuVuE9Qbtt_Ihu8ErhCdXQINAuyFdgsIcpdczDDO_VmxkBT_VAXPfwRbIOseXXBiGkSNzn7vczTqI1arThIMHtGt9Dn1Yfejb-hjhW3DPnVd9xT-66A',
+		'content-md5': 'TVRVNE5ERXlOekEwTkRNMU9BPT0=',
+		'origin': 'https://app.adspy.com',
+		'referer': 'https://app.adspy.com/ads;createdBetween=%EF%BC%BB%2201-Jan-2014%22%EF%BC%8C%2213-Mar-2020%22%EF%BC%BD;orderBy=total_shares;tech=%EF%BC%BB350%EF%BC%BD;countries=%EF%BC%BB%22US%22%EF%BC%BD',
+		'sec-fetch-dest': 'empty',
+		'sec-fetch-mode': 'cors',
+		'sec-fetch-site': 'same-site',
+		'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36'
+	}
+
+	for page in range(301):
+		url = 'https://api.adspy.com/api/ad?createdBetween%5B%5D=01-Jan-2014&createdBetween%5B%5D=13-Mar-2020&orderBy=total_shares&tech%5B%5D=350&countries%5B%5D=US&page={}'.format(page)
+		for i in data:
+			t = time.time()
+			response = requests.get(url, headers=headers)
+			tt = round(time.time() - t, 1)
+			print('--------------------------------------------------')
+			print('Request compleated in {} secs'.format(tt))
+			print('Remaining Pages: ', 301 - page)
+			print('--------------------------------------------------')
+			data = json.loads(response.text)['data']
+			print(i['id'])
+			print(i['createdOn'])
+			print(i['snapshot']['likeNum'])
+			print(i['snapshot']['commentsNum'])
+			print(i['snapshot']['shareNum'])
+
+			new_ad = FbAds()
+			new_ad.countryStats = i['countryStats']
+			new_ad.genderStats = i['genderStats']
+			new_ad.ageStats = i['ageStats']
+			new_ad.asy_id = i['id']
+			new_ad.isIg = i['isIg']
+			new_ad.text = i['text']
+			new_ad.createdOn = i['createdOn']
+			new_ad.privacyScope = i['privacyScope']
+			new_ad.minAge = i['minAge']
+			new_ad.maxAge = i['maxAge']
+			new_ad.actor = i['actor']
+			new_ad.countries = i['countries']
+			new_ad.genders = i['genders']
+			new_ad.snapshot = i['snapshot']
+			new_ad.attachments = i['attachments']
+			new_ad.comments = i['comments']
+			new_ad.adType = i['adType']
+			new_ad.linkToAd = i['linkToAd']
+			new_ad.mainAttachment = i['mainAttachment']
+			new_ad.height = i['height']
+			likeNum = i['snapshot']['likeNum']
+			commentsNum = i['snapshot']['commentsNum']
+			shareNum = i['snapshot']['shareNum']
+			new_ad.save()
+
+
+	return render(request, 'pages/fbads.html')

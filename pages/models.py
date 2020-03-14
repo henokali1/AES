@@ -73,7 +73,7 @@ class Err(models.Model):
 		return str(self.productId) + ' - ' + str(self.func_name)
 
 # FB Ads
-class FbAds(models.Model):
+class Ad(models.Model):
 	countryStats = models.TextField(default='')
 	genderStats = models.TextField(default='')
 	ageStats = models.TextField(default='')
@@ -100,3 +100,4 @@ class FbAds(models.Model):
 
 	def __str__(self):
 		return str(self.pk) + ' - ' + str(self.likeNum)
+

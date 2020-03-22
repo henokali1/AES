@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'pages',
     'vv_products',
+    'adspy',
 ]
 
 MIDDLEWARE = [

@@ -1,0 +1,153 @@
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>FB Ads</title>
+    <style>
+        img video {
+            max-width:464px;
+            max-height:480px;
+            width:auto;
+            height:auto;
+        }
+        .btn {
+          background-color: DodgerBlue;
+          border: none;
+          color: white;
+          padding: 12px 16px;
+          font-size: 16px;
+          cursor: pointer;
+        }
+        
+        /* Darker background on mouse-over */
+        .btn:hover {
+          background-color: RoyalBlue;
+        }
+        </style>
+</head>
+<body>
+    <div class="container">
+        <br>
+        <center><h1>All Ads</h1></center>
+    <form method="post">
+        {% csrf_token %}
+        <p>{{filter}}</p>
+        <div class="form-group">
+            {% if filter == 'likeNum' %}
+                <label for="sel1">Sort By:</label>
+                <select class="form-control" id="sel1" name="filter_opt">
+                    <option value="no_filter">----------</option>
+                    <option value="likeNum" selected="selected">Likes</option>
+                    <option value="commentsNum">Comments</option>
+                    <option value="shareNum">Shares</option>
+                </select>
+            {% elif filter == 'commentsNum' %}
+                <label for="sel1">Sort By:</label>
+                <select class="form-control" id="sel1" name="filter_opt">
+                    <option value="no_filter">----------</option>
+                    <option value="likeNum">Likes</option>
+                    <option value="commentsNum" selected="selected">Comments</option>
+                    <option value="shareNum">Shares</option>
+                </select>
+            {% elif filter == 'shareNum' %}
+                <label for="sel1">Sort By:</label>
+                <select class="form-control" id="sel1" name="filter_opt">
+                    <option value="no_filter">----------</option>
+                    <option value="likeNum">Likes</option>
+                    <option value="commentsNum">Comments</option>
+                    <option value="shareNum" selected="selected">Shares</option>
+                </select>
+            {% else %}
+                <label for="sel1">Sort By:</label>
+                <select class="form-control" id="sel1" name="filter_opt">
+                    <option value="no_filter">----------</option>
+                    <option value="likeNum">Likes</option>
+                    <option value="commentsNum">Comments</option>
+                    <option value="shareNum">Shares</option>
+                </select>
+            {% endif %}
+        </div>
+        <button class="btn" type="submit">Apply</button>
+        <br>
+        <br>
+    </form>
+        <div class="row">
+            {% for ad in ads %}
+            <div class="col-sm-col-sm-12 col-md-6 col-lg-4">
+                    <div class="card" style="margin-bottom: 2em;">
+                        <p style="padding-left: 1rem; padding-top: 1rem;">{{ad.text}}</p>
+                        {% if ad.hasVideo %}
+                        <video controls poster="{{ad.imageUrl}}">
+                            <source src="{{ad.videoUrl}}" type="video/mp4">
+                            Your browser does not support the video tag.
+                          </video>
+                        {% else %}
+                        <img class="card-img-top" src="{{ad.imageUrl}}" alt="Card image" style="width:100%">
+                        {% endif %}
+                        <div class="card-body">
+                            <button style="margin-bottom: 1rem;" class="btn"><i class="fa fa-thumbs-o-up"></i> {{ad.likeNum|floatformat:0|intcomma}}</button>
+                            <button style="margin-bottom: 1rem;" class="btn"><i class="fa fa-comment-o"></i> {{ad.commentsNum|floatformat:0|intcomma}}</button>
+                            <button style="margin-bottom: 1rem;" class="btn"><i class="fa fa-share-alt"></i> {{ad.shareNum|floatformat:0|intcomma}}</button>
+                            <a href="https://app.adspy.com/ads/{{ad.asy_id}}" target="_blank" style="margin-bottom: 1rem;" class="btn"><i class="fa fa-eye"></i> Adspy</a>
+                            <a href="{{ad.linkToAd}}" target="_blank" style="margin-bottom: 1rem;" class="btn"><i class="fa fa-facebook-f"></i></a>
+                        </div>
+                    </div>
+            </div>
+            {% endfor %}
+        </div>
+        <center>
+          <br>
+          <br>
+          {% if ads.has_other_pages %}
+          <nav aria-label="Page navigation example">
+            <ul class="pagination">
+              {% if ads.has_previous %}
+             <li class="page-item"><a class="page-link" href="?page={{ ads.previous_page_number }}">Previous</a></li>
+            {% else %}
+              <li class="page-item disabled"><a class="page-link">Previous</a></li>
+            {% endif %}
+            {% if ads.has_next %}
+              <li class="page-item"><a class="page-link" href="?page={{ ads.next_page_number }}">Next</a></li>
+            {% else %}
+            <li class="page-item disabled"><a class="page-link" href="#">Next</a></li>
+            {% endif %}
+          </ul>
+        </nav>
+        {% endif %}
+          <br>
+          <br>
+        </center>
+        {% if ads.has_other_pages %}
+        <nav aria-label="Page navigation example">
+          <ul class="pagination">
+            {% if ads.has_previous %}
+           <li class="page-item"><a class="page-link" href="?page={{ ads.previous_page_number }}">Previous</a></li>
+          {% else %}
+            <li class="page-item disabled"><a class="page-link">Previous</a></li>
+          {% endif %}
+          {% for i in ads.paginator.page_range %}
+            {% if ads.number == i %}
+            <li class="page-item active"><a class="page-link" href="#"><span>{{ i }} <span class="sr-only">(current)</span></span></a></li>
+            {% else %}
+              <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+            {% endif %}
+          {% endfor %}
+          {% if ads.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ ads.next_page_number }}">Next</a></li>
+          {% else %}
+          <li class="page-item disabled"><a class="page-link" href="#">Next</a></li>
+          {% endif %}
+        </ul>
+      </nav>
+      {% endif %}
+
+      </div>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+</body>
+</html>

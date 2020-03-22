@@ -14,5 +14,4 @@ urlpatterns = [
     path('products-srtd-order-count/', views.products_srtd_order, name='products_srtd_order.html'),
     path('save-products/<str:products>/', views.save_products, name='save_products.html'),
     path('cats/<str:cat_urls>/', views.cat_urls, name='cat_urls.html'),
-    path('fbads', views.fbads, name='fbads.html'),
 ]

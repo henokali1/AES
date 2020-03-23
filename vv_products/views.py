@@ -34,5 +34,6 @@ def vv_product_all(request):
     return render(request, 'vv_products/vv_product_all.html', args)
 
 def vv_product(request, pk):
-    print(pk)
-    return render(request, 'vv_products/vv_product.html')
+    product = VvProduct.objects.all().filter(pk=pk)[0]
+    args = {'product': product}
+    return render(request, 'vv_products/vv_product.html', args)

@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'pages',
     'vv_products',
     'adspy',
+    'emoji',
 ]
 
 MIDDLEWARE = [

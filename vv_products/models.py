@@ -26,6 +26,14 @@ class VvProduct(models.Model):
     ad_creative = models.TextField(default='')
     product_image = models.TextField(default='')
     video = models.TextField(default='')
+    video_thumbnail = models.TextField(default='')
+    ad_copy1 = models.TextField(default='')
+    ad_copy2 = models.TextField(default='')
+    category_ext = models.TextField(default='')
+    aliexpress1_url = models.TextField(default='')
+    aliexpress2_url = models.TextField(default='')
+    amazon1_url = models.TextField(default='')
+    amazon2_url = models.TextField(default='')
 
     def __str__(self):
         return str(self.pk) + ' - ' + self.title

@@ -113,22 +113,49 @@ def add_vv_product_to_django_db():
         
         print(p)
 
-def update_img_url():
+def update_urls():
     all_vv_ps = VvProduct.objects.all()
-    c = 0
     for p in all_vv_ps:
         print(p.pk)
-        try:
-            ims=ast.literal_eval(p.images)[0]
-            url = ims['url']
-            if '/media/product/images/' in url:
-                url = 'https://app.tryviralvault.com' + url
-            VvProduct.objects.filter(pk=p.pk).update(product_image = url)
-        except:
-            ims=ast.literal_eval(p.images)[0]
-            url = ims['image']
-            if '/media/product/images/' in url:
-                url = 'https://app.tryviralvault.com' + url
-            VvProduct.objects.filter(pk=p.pk).update(product_image = url)
+        l=[1068, 1069, 1070, 1071, 1380, 1509, 1520, 1610]
 
+        if p.pk in l:
+            category_ext = '' if ((p.category == None) or (p.category == '')) else ast.literal_eval(p.category)['title']
+            aliexpress1_url = p.aliexpress1
+            aliexpress2_url = p.aliexpress2
+            amazon1_url = p.amazon1
+            amazon2_url = p.amazon2
 
+            VvProduct.objects.filter(pk=p.pk).update(
+                category_ext = category_ext,
+                aliexpress1_url = aliexpress1_url,
+                aliexpress2_url = aliexpress2_url,
+                amazon1_url = amazon1_url,
+                amazon2_url = amazon2_url,
+            )
+        else:
+            category_ext = '' if ((p.category == None) or (p.category == '')) else ast.literal_eval(p.category)['title']
+            aliexpress1_url = '' if ((p.aliexpress1 == None) or (p.aliexpress1 == '')) else ast.literal_eval(p.aliexpress1)['url']
+            aliexpress2_url = '' if ((p.aliexpress2 == None) or (p.aliexpress2 == '')) else ast.literal_eval(p.aliexpress2)['url']
+            amazon1_url = '' if ((p.amazon1 == None) or (p.amazon1 == '')) else ast.literal_eval(p.amazon1)['url']
+            amazon2_url = '' if ((p.amazon2 == None) or (p.amazon2 == '')) else ast.literal_eval(p.amazon2)['url']
+            
+
+            video = '' if ((p.ad_creative == None) or (p.ad_creative == '') or (ast.literal_eval(p.ad_creative)['product_video'] == None)) else 'https://app.tryviralvault.com/' + ast.literal_eval(p.ad_creative)['product_video']
+            video_thumbnail = '' if ((p.ad_creative == None) or (p.ad_creative == '') or (ast.literal_eval(p.ad_creative)['thumbnail'] == None)) else 'https://app.tryviralvault.com/' + ast.literal_eval(p.ad_creative)['thumbnail']
+            ad_copy1 = '' if ((p.ad_creative == None) or (p.ad_creative == '') or (ast.literal_eval(p.ad_creative)['option1'] == None)) else ast.literal_eval(p.ad_creative)['option1']
+            ad_copy2 = '' if ((p.ad_creative == None) or (p.ad_creative == '') or (ast.literal_eval(p.ad_creative)['option2'] == None)) else ast.literal_eval(p.ad_creative)['option2']
+        
+            VvProduct.objects.filter(pk=p.pk).update(
+                category_ext = category_ext,
+                aliexpress1_url = aliexpress1_url,
+                aliexpress2_url = aliexpress2_url,
+                amazon1_url = amazon1_url,
+                amazon2_url = amazon2_url,
+                video = video,
+                video_thumbnail = video_thumbnail,
+                ad_copy1 = ad_copy1,
+                ad_copy2 = ad_copy2
+            )
+
+update_urls()

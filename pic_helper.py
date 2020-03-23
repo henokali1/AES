@@ -80,34 +80,55 @@ def get_from_db():
 
 
 # del_db()
-db = read_db()
+# db = read_db()
 
-for p in db:
-    new_vv_p = VvProduct()
+def add_vv_product_to_django_db():
+    for p in db:
+        new_vv_p = VvProduct()
 
-    new_vv_p.vvpk = 0 if db[p]['vvpk'] == None else db[p]['vvpk']
-    new_vv_p.title = '' if db[p]['title'] == None else db[p]['title']
-    new_vv_p.category = '' if db[p]['category'] == None else db[p]['category']
-    new_vv_p.timestamp = '' if db[p]['timestamp'] == None else db[p]['timestamp']
-    new_vv_p.description = '' if db[p]['description'] == None else db[p]['description']
-    new_vv_p.fb_targeting = '' if db[p]['fb_targeting'] == None else db[p]['fb_targeting']
-    new_vv_p.cogs = 0.0 if db[p]['cogs'] == None else float(db[p]['cogs'])
-    new_vv_p.price = 0.0 if db[p]['price'] == None else float(db[p]['price'])
-    new_vv_p.profit = 0.0 if db[p]['profit'] == None else float(db[p]['profit'])
-    new_vv_p.favorite = '' if db[p]['favorite'] == None else db[p]['favorite']
-    new_vv_p.fb_url = '' if db[p]['fb_url'] == None else db[p]['fb_url']
-    new_vv_p.likes = 0.0 if db[p]['likes'] == None else float(db[p]['likes'])
-    new_vv_p.comments = 0.0 if db[p]['comments'] == None else float(db[p]['comments'])
-    new_vv_p.redirects = 0.0 if db[p]['redirects'] == None else float(db[p]['redirects'])
-    new_vv_p.aliexpress1 = '' if db[p]['aliexpress1'] == None else db[p]['aliexpress1']
-    new_vv_p.aliexpress2 = '' if db[p]['aliexpress2'] == None else db[p]['aliexpress2']
-    new_vv_p.amazon1 = '' if db[p]['amazon1'] == None else db[p]['amazon1']
-    new_vv_p.amazon2 = '' if db[p]['amazon2'] == None else db[p]['amazon2']
-    new_vv_p.competitor_store = '' if db[p]['competitor_store'] == None else db[p]['competitor_store']
-    new_vv_p.aliexpress_data = '[]' if db[p]['aliexpress_data'] == None else db[p]['aliexpress_data']
-    new_vv_p.images = '' if db[p]['images'] == None else db[p]['images']
-    new_vv_p.ad_creative = '' if db[p]['ad_creative'] == None else db[p]['ad_creative']
+        new_vv_p.vvpk = 0 if db[p]['vvpk'] == None else db[p]['vvpk']
+        new_vv_p.title = '' if db[p]['title'] == None else db[p]['title']
+        new_vv_p.category = '' if db[p]['category'] == None else db[p]['category']
+        new_vv_p.timestamp = '' if db[p]['timestamp'] == None else db[p]['timestamp']
+        new_vv_p.description = '' if db[p]['description'] == None else db[p]['description']
+        new_vv_p.fb_targeting = '' if db[p]['fb_targeting'] == None else db[p]['fb_targeting']
+        new_vv_p.cogs = 0.0 if db[p]['cogs'] == None else float(db[p]['cogs'])
+        new_vv_p.price = 0.0 if db[p]['price'] == None else float(db[p]['price'])
+        new_vv_p.profit = 0.0 if db[p]['profit'] == None else float(db[p]['profit'])
+        new_vv_p.favorite = '' if db[p]['favorite'] == None else db[p]['favorite']
+        new_vv_p.fb_url = '' if db[p]['fb_url'] == None else db[p]['fb_url']
+        new_vv_p.likes = 0.0 if db[p]['likes'] == None else float(db[p]['likes'])
+        new_vv_p.comments = 0.0 if db[p]['comments'] == None else float(db[p]['comments'])
+        new_vv_p.redirects = 0.0 if db[p]['redirects'] == None else float(db[p]['redirects'])
+        new_vv_p.aliexpress1 = '' if db[p]['aliexpress1'] == None else db[p]['aliexpress1']
+        new_vv_p.aliexpress2 = '' if db[p]['aliexpress2'] == None else db[p]['aliexpress2']
+        new_vv_p.amazon1 = '' if db[p]['amazon1'] == None else db[p]['amazon1']
+        new_vv_p.amazon2 = '' if db[p]['amazon2'] == None else db[p]['amazon2']
+        new_vv_p.competitor_store = '' if db[p]['competitor_store'] == None else db[p]['competitor_store']
+        new_vv_p.aliexpress_data = '[]' if db[p]['aliexpress_data'] == None else db[p]['aliexpress_data']
+        new_vv_p.images = '' if db[p]['images'] == None else db[p]['images']
+        new_vv_p.ad_creative = '' if db[p]['ad_creative'] == None else db[p]['ad_creative']
 
-    new_vv_p.save()
-    
-    print(p)
+        new_vv_p.save()
+        
+        print(p)
+
+def update_img_url():
+    all_vv_ps = VvProduct.objects.all()
+    c = 0
+    for p in all_vv_ps:
+        print(p.pk)
+        try:
+            ims=ast.literal_eval(p.images)[0]
+            url = ims['url']
+            if '/media/product/images/' in url:
+                url = 'https://app.tryviralvault.com' + url
+            VvProduct.objects.filter(pk=p.pk).update(product_image = url)
+        except:
+            ims=ast.literal_eval(p.images)[0]
+            url = ims['image']
+            if '/media/product/images/' in url:
+                url = 'https://app.tryviralvault.com' + url
+            VvProduct.objects.filter(pk=p.pk).update(product_image = url)
+
+

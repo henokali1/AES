@@ -24,6 +24,8 @@ class VvProduct(models.Model):
     aliexpress_data = models.TextField(default='')
     images = models.TextField(default='')
     ad_creative = models.TextField(default='')
+    product_image = models.TextField(default='')
+    video = models.TextField(default='')
 
     def __str__(self):
         return str(self.pk) + ' - ' + self.title

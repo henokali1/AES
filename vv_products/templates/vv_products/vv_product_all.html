@@ -1,1 +1,105 @@
-<h1>all vv prouct</h1>
+  
+{% extends 'pages/base.html' %}
+{% load static %}
+{% load humanize %}
+{% block title %}VV Products{% endblock title %}
+{% block link_tag %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+img video {
+    max-width:464px;
+    max-height:480px;
+    width:auto;
+    height:auto;
+}
+.btn {
+    background-color: DodgerBlue;
+    border: none;
+    color: white;
+    padding: 12px 16px;
+    font-size: 16px;
+    cursor: pointer;
+}
+.infbtn {
+    background-color: rgb(232, 236, 231);
+    border: none;
+    color: rgb(31, 27, 27);
+    padding: 12px 16px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+/* Darker background on mouse-over */
+.btn:hover {
+    background-color: RoyalBlue;
+}
+</style>
+{% endblock link_tag %}
+{% block content %}
+<div class="container"> 
+    <div class="row">
+        {% for product in products %}
+        <div class="col-sm-col-sm-12 col-md-6 col-lg-4">
+                <div class="card" style="margin-bottom: 2em;">
+                    <p style="padding-left: 1rem; padding-top: 1rem;">{{product.title}}</p>
+                    <a href="/vv-product/{{product.pk}}/" target="_blank"><img class="card-img-top" src="{{product.product_image}}" alt="Card image" style="width:100%"></a>
+                    <div class="card-body">
+                        <button style="margin-bottom: 1rem;" class="btn"><i class="fa fa-thumbs-o-up"></i> {{product.likes|floatformat:0|intcomma}}</button>
+                        <button style="margin-bottom: 1rem;" class="btn"><i class="fa fa-comment-o"></i> {{product.comments|floatformat:0|intcomma}}</button>
+                        <button style="margin-bottom: 1rem;" class="btn"><i class="fa fa-share-alt"></i> {{product.redirects|floatformat:0|intcomma}}</button>
+                        <button style="margin-bottom: 1rem;" class="infbtn">COGS | ${{product.cogs}}</button>
+                        <button style="margin-bottom: 1rem;" class="infbtn">Price | ${{product.price}}</button>
+                        <button style="margin-bottom: 1rem;" class="infbtn">Profit | ${{product.profit}}</button>
+                        <a href="{{product.fburl}}" target="_blank" style="margin-bottom: 1rem;" class="btn"><i class="fa fa-facebook-f"></i></a>
+                    </div>
+                </div>
+        </div>
+        {% endfor %}
+    </div>
+    <center>
+      <br>
+      <br>
+      {% if products.has_other_pages %}
+      <nav aria-label="Page navigation example">
+        <ul class="pagination">
+          {% if products.has_previous %}
+         <li class="page-item"><a class="page-link" href="?page={{ products.previous_page_number }}">Previous</a></li>
+        {% else %}
+          <li class="page-item disabled"><a class="page-link">Previous</a></li>
+        {% endif %}
+        {% if products.has_next %}
+          <li class="page-item"><a class="page-link" href="?page={{ products.next_page_number }}">Next</a></li>
+        {% else %}
+        <li class="page-item disabled"><a class="page-link" href="#">Next</a></li>
+        {% endif %}
+      </ul>
+    </nav>
+    {% endif %}
+      <br>
+      <br>
+    </center>
+    {% if products.has_other_pages %}
+    <nav aria-label="Page navigation example">
+      <ul class="pagination">
+        {% if products.has_previous %}
+       <li class="page-item"><a class="page-link" href="?page={{ products.previous_page_number }}">Previous</a></li>
+      {% else %}
+        <li class="page-item disabled"><a class="page-link">Previous</a></li>
+      {% endif %}
+      {% for i in products.paginator.page_range %}
+        {% if products.number == i %}
+        <li class="page-item active"><a class="page-link" href="#"><span>{{ i }} <span class="sr-only">(current)</span></span></a></li>
+        {% else %}
+          <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+        {% endif %}
+      {% endfor %}
+      {% if products.has_next %}
+        <li class="page-item"><a class="page-link" href="?page={{ products.next_page_number }}">Next</a></li>
+      {% else %}
+      <li class="page-item disabled"><a class="page-link" href="#">Next</a></li>
+      {% endif %}
+    </ul>
+  </nav>
+  {% endif %}
+</div>
+{% endblock content %}

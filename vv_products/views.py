@@ -13,4 +13,26 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
 def vv_product_all(request):
-    return render(request, 'vv_products/vv_product_all.html')
+    args={}
+    all_products = VvProduct.objects.all().order_by('-likes')
+
+    page = request.GET.get('page', 1)
+
+    paginator = Paginator(all_products, 12)
+    try:
+        products = paginator.page(page)
+    except PageNotAnInteger:
+        products = paginator.page(1)
+    except EmptyPage:
+        products = paginator.page(paginator.num_pages)
+
+    # products = products[0:12]
+    args['products'] = products
+
+    args['len'] = len(products)
+    args['products'] = products
+    return render(request, 'vv_products/vv_product_all.html', args)
+
+def vv_product(request, pk):
+    print(pk)
+    return render(request, 'vv_products/vv_product.html')

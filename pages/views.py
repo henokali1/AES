@@ -88,7 +88,8 @@ def key_extractor(obj_str, s, e):
 # ---------------------------------------------------------------------------
 
 def pages(request):
-	return render(request, 'pages/dashboard.html')
+	args = {'dashboards': Dashboard.objects.all()}
+	return render(request, 'pages/dashboard.html', args)
 
 
 def all_categories(request):

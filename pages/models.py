@@ -71,3 +71,12 @@ class Err(models.Model):
 
 	def __str__(self):
 		return str(self.productId) + ' - ' + str(self.func_name)
+
+# Dashboard
+class Dashboard(models.Model):
+	title = models.CharField(max_length=254, default='')
+	url = models.CharField(max_length=254, default='')
+	fa_icon = models.CharField(max_length=254, default='')
+
+	def __str__(self):
+		return str(self.pk) + ' - ' + self.title

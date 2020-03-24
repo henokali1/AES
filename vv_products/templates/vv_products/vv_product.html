@@ -5,7 +5,6 @@
 {% load emoji_tags %}
 {% block title %}{{product.title|safe}}{% endblock title %}
 {% block link_tag %}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style>
 img video {
     max-width:464px;
@@ -13,47 +12,182 @@ img video {
     width:auto;
     height:auto;
 }
-.btn {
-    background-color: DodgerBlue;
-    border: none;
-    color: white;
-    padding: 12px 16px;
-    font-size: 16px;
-    cursor: pointer;
-}
-.infbtn {
-    background-color: rgb(232, 236, 231);
-    border: none;
-    color: rgb(31, 27, 27);
-    padding: 12px 16px;
-    font-size: 16px;
-    cursor: pointer;
-}
 
-/* Darker background on mouse-over */
-.btn:hover {
-    background-color: RoyalBlue;
-}
 </style>
 {% endblock link_tag %}
 
 {% block content %}
 <div class="container">
     <br>
-    <h1><center>{{product.title}}</center></h1>
-    <br>
-    
-    <div class="card" style="margin-bottom: 2em;">
-        <p style="padding-left: 1rem; padding-top: 1rem;">{{product.title}}</p>
-        <a href="/vv-product/{{product.pk}}/" target="_blank"><img class="card-img-top" src="{{product.product_image}}" alt="Card image" style="width:100%"></a>
-        <div class="card-body">
-            <button style="margin-bottom: 1rem;" class="btn"><i class="fa fa-thumbs-o-up"></i> {{product.likes|floatformat:0|intcomma}}</button>
-            <button style="margin-bottom: 1rem;" class="btn"><i class="fa fa-comment-o"></i> {{product.comments|floatformat:0|intcomma}}</button>
-            <button style="margin-bottom: 1rem;" class="btn"><i class="fa fa-share-alt"></i> {{product.redirects|floatformat:0|intcomma}}</button>
-            <button style="margin-bottom: 1rem;" class="infbtn">COGS | ${{product.cogs}}</button>
-            <button style="margin-bottom: 1rem;" class="infbtn">Price | ${{product.price}}</button>
-            <button style="margin-bottom: 1rem;" class="infbtn">Profit | ${{product.profit}}</button>
+    <div class="row">
+        <br>
+        <div class="col-sm-col-sm-12 col-md-6">
+            <div class="card" style="margin-bottom: 2em;">
+                <p style="padding-left: 1rem; padding-top: 1rem;">{{product.title}}</p>
+                {% if product.video_thumbnail != '' and product.video != '' %}
+                <video controls poster="{{product.video_thumbnail}}" style="width:100%">
+                    <source src="{{product.video}}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                {% elif product.video_thumbnail == '' and product.video != '' %}
+                <video controls poster="{{product.product_image}}" style="width:100%">
+                    <source src="{{product.video}}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                {% else %}
+                <img class="card-img-top" src="{{product.product_image}}" alt="Card image" style="width:100%">
+                {% endif %}
+                <div class="card-body">
+                    <button style="margin-bottom: 1rem;" class="infbtn"><i class="fa fa-thumbs-o-up"></i> {{product.likes|floatformat:0|intcomma}}</button>
+                    <button style="margin-bottom: 1rem;" class="infbtn"><i class="fa fa-comment-o"></i> {{product.comments|floatformat:0|intcomma}}</button>
+                    <button style="margin-bottom: 1rem;" class="infbtn"><i class="fa fa-share-alt"></i> {{product.redirects|floatformat:0|intcomma}}</button>
+                    <button style="margin-bottom: 1rem;" class="infbtn">COGS | ${{product.cogs}}</button>
+                    <button style="margin-bottom: 1rem;" class="infbtn">Price | ${{product.price}}</button>
+                    <button style="margin-bottom: 1rem;" class="infbtn">Profit | ${{product.profit}}</button>
+                    {% if product.fb_url != '' %}
+                    <a href="{{product.fb_url}}" target="_blank" style="margin-bottom: 1rem;" class="btn"><i class="fa fa-facebook-f"></i></a>
+                    {% endif %}
+                    {% if product.aliexpress1_url != '' %}
+                    <a href="{{product.aliexpress1_url}}" target="_blank" style="margin-bottom: 1rem;" class="btn"><i class="fa fa-shopping-cart"></i></a>
+                    {% endif %}
+                    {% if product.aliexpress2_url != '' %}
+                    <a href="{{product.aliexpress2_url}}" target="_blank" style="margin-bottom: 1rem;" class="btn"><i class="fa fa-shopping-cart"></i></a>
+                    {% endif %}
+                    {% if product.amazon1_url != '' %}
+                    <a href="{{product.amazon1_url}}" target="_blank" style="margin-bottom: 1rem;" class="btn"><i class="fa fa-amazon"></i></a>
+                    {% endif %}
+                    {% if product.amazon2_url != '' %}
+                    <a href="{{product.amazon2_url}}" target="_blank" style="margin-bottom: 1rem;" class="btn"><i class="fa fa-amazon"></i></a>
+                    {% endif %}
+                    {% if product.competitor_store != '' %}
+                    <a href="{{product.competitor_store}}" target="_blank" style="margin-bottom: 1rem;" class="btn"><i class="fa fa-shopping-bag"></i></a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-col-sm-12 col-md-6">
+            <div class="card">
+                <div id="accordion">
+                    {% if product.title != '' %}
+                    <div class="card">
+                      <div class="card-header" id="headingTitle">
+                        <h5 class="mb-0">
+                          <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTitle" aria-expanded="false" aria-controls="collapseTitle">
+                            Product Title
+                          </button>
+                        </h5>
+                      </div>
+                      <div id="collapseTitle" class="collapse" aria-labelledby="headingTitle" data-parent="#accordion">
+                        <div class="card-body">
+                          {{ product.title }}
+                          <button style="position: absolute; right: 10px; top: 5px;" onclick="textToClipboard(`{{product.title}}`)">Copy</button>
+                        </div>
+                      </div>
+                    </div>
+                    {% endif %}
+                    {% if product.description != '' %}
+                    <div class="card">
+                      <div class="card-header" id="headingdescription">
+                        <h5 class="mb-0">
+                          <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapsedescription" aria-expanded="false" aria-controls="collapsedescription">
+                            Product Description
+                          </button>
+                        </h5>
+                      </div>
+                      <div id="collapsedescription" class="collapse" aria-labelledby="headingdescription" data-parent="#accordion">
+                        <div class="card-body">
+                          {{ product.description }}
+                          <button style="position: absolute; right: 10px; top: 5px;" onclick="textToClipboard(`{{product.description}}`)">Copy</button>
+                        </div>
+                      </div>
+                    </div>
+                    {% endif %}
+                    {% if product.category_ext != '' %}
+                    <div class="card">
+                      <div class="card-header" id="headingTwo">
+                        <h5 class="mb-0">
+                          <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            Product Category
+                          </button>
+                        </h5>
+                      </div>
+                      <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                        <div class="card-body">
+                          {{ product.category_ext }}
+                          <button style="position: absolute; right: 10px; top: 5px;" onclick="textToClipboard(`{{product.category_ext}}`)">Copy</button>
+                        </div>
+                      </div>
+                    </div>
+                    {% endif %}
+                    {% if product.fb_targeting != '' %}
+                    <div class="card">
+                      <div class="card-header" id="headingFBTarg">
+                        <h5 class="mb-0">
+                          <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFBTarg" aria-expanded="false" aria-controls="collapseFBTarg">
+                            Product FB Targeting
+                          </button>
+                        </h5>
+                      </div>
+                      <div id="collapseFBTarg" class="collapse" aria-labelledby="headingFBTarg" data-parent="#accordion">
+                        <div class="card-body">
+                          {{ product.fb_targeting }}
+                          <button style="position: absolute; right: 10px; top: 5px;" onclick="textToClipboard(`{{product.fb_targeting}}`)">Copy</button>
+                        </div>
+                      </div>
+                    </div>
+                    {% endif %}
+                    {% if product.ad_copy1 != '' %}
+                    <div class="card">
+                      <div class="card-header" id="headingad_copy1">
+                        <h5 class="mb-0">
+                          <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapsead_copy1" aria-expanded="false" aria-controls="collapsead_copy1">
+                            AD Copy 1
+                          </button>
+                        </h5>
+                      </div>
+                      <div id="collapsead_copy1" class="collapse" aria-labelledby="headingad_copy1" data-parent="#accordion">
+                        <div class="card-body">
+                          {{ product.ad_copy1 }}
+                          <button style="position: absolute; right: 10px; top: 5px;" onclick="textToClipboard(`{{product.ad_copy1}}`)">Copy</button>
+                        </div>
+                      </div>
+                    </div>
+                    {% endif %}
+                    {% if product.ad_copy2 != '' %}
+                    <div class="card">
+                      <div class="card-header" id="headingad_copy2">
+                        <h5 class="mb-0">
+                          <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapsead_copy2" aria-expanded="false" aria-controls="collapsead_copy2">
+                            AD Copy 2
+                          </button>
+                        </h5>
+                      </div>
+                      <div id="collapsead_copy2" class="collapse" aria-labelledby="headingad_copy2" data-parent="#accordion">
+                        <div class="card-body">
+                          {{ product.ad_copy2 }}
+                          <button style="position: absolute; right: 10px; top: 5px;" onclick="textToClipboard(`{{product.ad_copy2}}`)">Copy</button>
+                        </div>
+                      </div>
+                    </div>
+                    {% endif %}
+                  </div>
+              </div>
         </div>
     </div>
 </div>
 {% endblock content %}
+
+{% block script_tag %}
+<script>
+    function textToClipboard (text) {
+        var dummy = document.createElement("textarea");
+        document.body.appendChild(dummy);
+        dummy.value = text;
+        dummy.select();
+        document.execCommand("copy");
+        document.body.removeChild(dummy);
+        console.log('copied: ',text)
+    }
+</script>
+{% endblock script_tag %}

@@ -164,10 +164,7 @@
 
 
   
-
-<div id="linechart_material"></div>
-<center><h1>Total: {{ tot }}</h1></center>
-<br>
+{% if tot > 0 %}
 <div class="container">
 <div class="card shadow-lg p-3 mb-5 bg-white rounded">
   <table style="margin: 1rem;" class="table table-hover table-responsive">
@@ -199,6 +196,10 @@
 
 </div>
 </div>
+{% endif %}
+<div id="linechart_material"></div>
+<center><h1>Total: {{ tot }}</h1></center>
+<br>
   <br>  
   <br> 
 {% endblock content %}

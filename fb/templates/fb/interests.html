@@ -1,0 +1,26 @@
+{% extends 'pages/base.html' %}
+{% load static %}
+{% load humanize %}
+{% block title %}Dashboard{% endblock title %}
+{% block content %}
+<div class="container">
+<center><h4>FB Intersts</h4></center>
+<div class="card shadow-lg p-3 mb-5 bg-white rounded">
+    <table style="margin: 1rem;" class="table table-hover table-responsive">
+        <tr>
+          <th>Name</th>
+          <th>Audience Size</th>
+          <th>Path</th>
+        </tr>
+        {% for interest in fb_interests %}
+        <tr>
+          <td>{{interest.name}}</td>
+          <td>{{interest.audience_size|intword}}</td>
+          <td>{{interest.path}}</td>
+        </tr>
+        {% endfor %}
+      </table>
+  
+  </div>
+  </div>
+{% endblock content %}

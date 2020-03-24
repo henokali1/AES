@@ -23,4 +23,5 @@ urlpatterns = [
     path('', include('pages.urls')),
     path('vv-product/', include('vv_products.urls')),
     path('adspy/', include('adspy.urls')),
+    path('fb/', include('fb.urls')),
 ]

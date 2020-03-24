@@ -1,209 +1,188 @@
-  <html>
-  <head>
-    <style>
-      table {
-        font-family: arial, sans-serif;
-        border-collapse: collapse;
-        width: 100%;
-      }
+{% extends 'pages/base.html' %}
+{% load static %}
+{% load humanize %}
+{% block link_tag %}
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+{% endblock link_tag %}
+{% block title %}Daily Sales{% endblock title %}
 
-      td, th {
-        border: 1px solid #dddddd;
-        text-align: left;
-        padding: 8px;
-      }
+{% block content %}
+<div class="container">
+  <div class="card shadow-lg p-3 mb-5 bg-white rounded">
+    <center style="padding-top: 1rem;"><h5 class="card-title">Daily Sales Filter</h5></center>
+    <div class="card-body">
+      <form method="POST">
+        {% csrf_token %}
+        <div class="form-row">
+          <div class="form-group col-sm-4">
+            <label for="rating">Rating</label>
+            <input type="number" step="0.01" name="rating" min="1" max="5" value="{{ rating }}" class="form-control" id="rating" placeholder="Rating">
+          </div>
+          <div class="form-group col-sm-4">
+            <label for="min_price">Price(min)</label>
+            <input type="number" step="0.01" name="min_price" value="{{ min_price }}" class="form-control" id="min_price" placeholder="Price(min)">
+          </div>
+          <div class="form-group col-sm-4">
+            <label for="max_price">Price(max)</label>
+            <input type="number" step="0.01" name="max_price" value="{{ max_price }}" class="form-control" id="max_price" placeholder="Price(max)">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-sm-4">
+            <label for="min_tot_sales">Total Sales (min)</label>
+            <input type="number" step="0.01" name="min_tot_sales" value="{{ min_tot_sales }}" class="form-control" id="min_tot_sales" placeholder="Total Sales (min)">
+          </div>
+          <div class="form-group col-sm-4">
+            <label for="max_tot_sales">Total Sales (max)</label>
+            <input type="number" step="0.01" name="max_tot_sales" value="{{ max_tot_sales }}" class="form-control" id="max_tot_sales" placeholder="Total Sales (max)">
+          </div>
+          <div class="form-group col-sm-4">
+            <label for="log_reliability">Logistics Reliablility</label>
+              {% if log_reliability == 'H' %}
+              <select id="log_reliability" name="log_reliability" class="form-control">
+                <option value="def">---------</option>
+                <option selected="selected" value="H">Excellent</option>
+                <option value="M">Average</option>
+                <option value="L">Below average</option>
+                <option value="U">Unknown</option>
+              </select>
+              {% elif log_reliability == 'M' %}
+              <select id="log_reliability" name="log_reliability" class="form-control">
+                <option value="def">---------</option>
+                <option value="H">Excellent</option>
+                <option selected="selected" value="M">Average</option>
+                <option value="L">Below average</option>
+                <option value="U">Unknown</option>
+              </select>
+              {% elif log_reliability == 'L' %}
+              <select id="log_reliability" name="log_reliability" class="form-control">
+                <option value="def">---------</option>
+                <option value="H">Excellent</option>
+                <option value="M">Average</option>
+                <option selected="selected" value="L">Below average</option>
+                <option value="U">Unknown</option>
+              </select>
+              {% elif log_reliability == 'U' %}
+              <select id="log_reliability" name="log_reliability" class="form-control">
+                <option value="def">---------</option>
+                <option value="H">Excellent</option>
+                <option value="M">Average</option>
+                <option value="L">Below average</option>
+                <option selected="selected" value="U">Unknown</option>
+              </select>
+              {% else %}
+              <select id="log_reliability" name="log_reliability" class="form-control">
+                <option selected="selected" value="def">---------</option>
+                <option value="H">Excellent</option>
+                <option value="M">Average</option>
+                <option value="L">Below average</option>
+                <option value="U">Unknown</option>
+              </select>
+              {% endif %}
+            </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-sm-3">
+            <label for="min_price">Price(min)</label>
+            <input type="number" name="min_price" value="{{ min_price }}" class="form-control" id="min_price" placeholder="Price(min)">
+          </div>
+          <div class="form-group col-sm-3">
+            <label for="max_price">Price(max)</label>
+            <input type="number" name="max_price" value="{{ max_price }}" class="form-control" id="max_price" placeholder="Price(max)">
+          </div>
+          <div class="form-group col-sm-3">
+            <label for="min_daily_sale">Daily Sales(Min)</label>
+            <input type="number" name="min_daily_sale" value="{{ min_daily_sale }}" class="form-control" id="min_daily_sale" placeholder="Daily Sales(Min)">
+          </div>
+          <div class="form-group col-sm-3">
+            <label for="max_daily_sale">Daily Sales(max)</label>
+            <input type="number" name="max_daily_sale" value="{{ max_daily_sale }}" class="form-control" id="max_daily_sale" placeholder="Daily Sales(max)">
+          </div>
+        </div>
 
-      tr:nth-child(even) {
-        background-color: #dddddd;
-      }
-    </style>
-<!--     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script type="text/javascript">
-    	google.charts.load('current', {'packages':['line']});
-      google.charts.setOnLoadCallback(drawChart);
+        <div class="form-row">
+          <div class="form-group col-sm-6">
+            <label for="date-range-selector">Date</label>
+            <input style="padding-bottom: 0.5rem; padding-top: 0.5rem; padding-left: 1rem; width: 100%;" type="text" name="daterange" id="date-range-selector" value="01/01/2018 - 01/15/2018" />
+          </div>
+          <div class="form-group col-sm-6">
+            <label for="sort_by">Sort By</label>
+            <select id="sort_by" name="sort_by" class="form-control">
+              <option selected="selected" value="def">---------</option>
+              <option value="rating">Rating</option>
+              <option value="minPrice">Price</option>
+              <option value="totSalesCount">Total Sales Count</option>
+              <option value="date">Date</option>
+              <option value="quantitySold">Daily Sale</option>
+            </select>
+          </div>
+        </div>
 
-    function drawChart() {
+        <button type="submit" class="btn btn-primary pull-right">Search</button>
+      </form>
+    </div>
+  </div>
+</div>
+<b>
 
-      var data = new google.visualization.DataTable();
-      data.addColumn('date', 'Date');
-      data.addColumn('number', 'Product 1');
-      data.addColumn('number', 'Product 2');
-      data.addColumn('number', 'Product 3');
 
-      data.addRows([
-        [new Date("2019-02-01"),  20, 10.8, 12.8],
-        [new Date("2019-02-02"),  0, 10.8, 41.8],
-        [new Date("2019-02-03"),  30.9, 9.5, 32.4],
-        [new Date("2019-02-04"),  25.4,   17, 25.7],
-        [new Date("2019-02-05"),  11.7, 18.8, 10.5],
-        [new Date("2019-02-06"),  11.9, 17.6, 10.4],
-        [new Date("2019-02-07"),   8.8, 13.6,  7.7],
-        [new Date("2019-02-08"),   7.6, 12.3,  9.6],
-        [new Date("2019-02-09"),  12.3, 29.2, 10.6],
-        [new Date("2019-02-10"),  16.9, 12.9, 14.8],
-      	[new Date("2019-02-11"),  20, 10.8, 12.8],
-        [new Date("2019-02-12"),  0, 10.8, 41.8],
-        [new Date("2019-02-13"),  30.9, 9.5, 32.4],
-        [new Date("2019-02-14"),  25.4,   17, 25.7],
-        [new Date("2019-02-15"),  11.7, 18.8, 10.5],
-        [new Date("2019-02-16"),  11.9, 17.6, 10.4],
-        [new Date("2019-02-17"),   8.8, 13.6,  7.7],
-        [new Date("2019-02-18"),   7.6, 12.3,  9.6],
-        [new Date("2019-02-19"),  12.3, 29.2, 10.6],
-        [new Date("2019-02-20"),  16.9, 12.9, 14.8],
-        [new Date("2019-02-21"), 12.8, 30.9, 11.6],
-        [new Date("2019-02-22"),  5.3,  7.9,  4.7],
-        [new Date("2019-02-23"),  6.6,  8.4,  5.2],
-        [new Date("2019-02-24"),  4.8,  6.3,  3.6],
-        [new Date("2019-02-25"),  4.2,  6.2,  3.4]
-      ]);
+<h1>Total: {{ tot }}</h1>  
 
-      var options = {
-        chart: {
-          title: '',
-          subtitle: ''
-        },
-        width: 1500,
-        height: 500
-      };
+<div id="linechart_material"></div>
 
-      var chart = new google.charts.Line(document.getElementById('linechart_material'));
 
-      chart.draw(data, google.charts.Line.convertOptions(options));
-    }
-    
-    </script> -->
-  </head>
-  <body>
-    <b>
-    <a href="/">Dashboard</a>
-  </b>
-    <form method="post">
-      {% csrf_token %}
-      <ul>
-        <li>
-          Rating: <input type="number" step="0.01" name="rating" min="1" max="5" value="{{ rating }}">
-        </li>
-        <li>
-          Price(Min): <input type="number" step="0.01" name="min_price" value="{{ min_price }}">
-        </li>
-        <li>
-          Price(Max): <input type="number" step="0.01" name="max_price" value="{{ max_price }}">
-        </li>
-        <li>
-          Totla Sales(Min): <input type="number" step="0.01" name="min_tot_sales" value="{{ min_tot_sales }}">
-        </li>
-        <li>
-          Totla Sales(Max): <input type="number" step="0.01" name="max_tot_sales" value="{{ max_tot_sales }}">
-        </li>
-        <li>
-          Logistics Reliablility:
-          {% if log_reliability == 'H' %}
-          <select name="log_reliability">
-            <option value="def">---------</option>
-            <option selected="selected" value="H">Excellent</option>
-            <option value="M">Average</option>
-            <option value="L">Below average</option>
-            <option value="U">Unknown</option>
-          </select>
-          {% elif log_reliability == 'M' %}
-          <select name="log_reliability">
-            <option value="def">---------</option>
-            <option value="H">Excellent</option>
-            <option selected="selected" value="M">Average</option>
-            <option value="L">Below average</option>
-            <option value="U">Unknown</option>
-          </select>
-          {% elif log_reliability == 'L' %}
-          <select name="log_reliability">
-            <option value="def">---------</option>
-            <option value="H">Excellent</option>
-            <option value="M">Average</option>
-            <option selected="selected" value="L">Below average</option>
-            <option value="U">Unknown</option>
-          </select>
-          {% elif log_reliability == 'U' %}
-          <select name="log_reliability">
-            <option value="def">---------</option>
-            <option value="H">Excellent</option>
-            <option value="M">Average</option>
-            <option value="L">Below average</option>
-            <option selected="selected" value="U">Unknown</option>
-          </select>
-          {% else %}
-          <select name="log_reliability">
-            <option selected="selected" value="def">---------</option>
-            <option value="H">Excellent</option>
-            <option value="M">Average</option>
-            <option value="L">Below average</option>
-            <option value="U">Unknown</option>
-          </select>
-          {% endif %}
-        </li>
-        <li>
-          Daily Sales(Min): <input type="number" name="min_daily_sale" value="{{ min_daily_sale }}">
-        </li>
-        <li>
-          Daily Sales(Max): <input type="number" name="max_daily_sale" value="{{ max_daily_sale }}">
-        </li>
-        <li>
-          Staring Date:<input type="date" name="staring_date" value="{{ staring_date }}">
-        </li>
-        <li>
-          End Date:<input type="date" name="end_date" value="{{ end_date }}">
-        </li>
-        <li>
-          Sort By: 
-          <select name="sort_by">
-            <option selected="selected" value="def">---------</option>
-            <option value="rating">Rating</option>
-            <option value="minPrice">Price</option>
-            <option value="totSalesCount">Total Sales Count</option>
-            <option value="date">Date</option>
-            <option value="quantitySold">Daily Sale</option>
-          </select>
-        </li>
-      </ul>
-      <button type="submit">Submit</button>
-    </form>
-    
+<table>
+    <tr>
+      <th>No.</th>
+      <th>Quantity Sold</th>
+      <th>Date</th>
+      <th>Rating</th>
+      <th>Price (min)</th>
+      <th>Price (max)</th>
+      <th>Total Sales Count</th>
+      <th>Logistics Reliability</th> 
+      <th>Product</th>  
+      <th>Daily Sales Graph</th>
+    </tr>
+    {% for i in filtered %}
+    <tr>
+      <td>{{forloop.counter}}</td>
+      <td>{{i.quantitySold}}</td>
+      <td>{{i.date}}</td>
+      <td>{{i.product.rating}}</td>
+      <td>${{i.product.minPrice}}</td>
+      <td>${{i.product.maxPrice}}</td>
+      <td>{{i.product.totSalesCount}}</td>
+      <td>{{i.product.logisticsReliability}}</td>
+      <td><a href="https://www.aliexpress.com/item/{{i.product.productId}}.html" target="_blank">{{i.product.productTitle|truncatechars:35}}</a></td>
+      <td>Graph</td>
+    </tr>
+    {% endfor %}
+  </table>
+  <br>  
+  <br>  
+{% endblock content %}
 
-    <h1>Total: {{ tot }}</h1>  
+{% block script_tag %}
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 
-    <div id="linechart_material"></div>
+<script>
+  $('#date-range-selector').daterangepicker({
+    ranges: {
+        'Today': [moment(), moment()],
+        'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+        'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+        'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+        'This Month': [moment().startOf('month'), moment().endOf('month')],
+        'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+    },
+    "alwaysShowCalendars": true,
+    "startDate": [moment().subtract(1, 'days').format('YYYY-MM-DD'), moment().subtract(1, 'days')][0]._d,
+    "endDate": [moment()][0]._d
+}, function(start, end, label) {
+  console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
+});
 
-    
-    <table>
-        <tr>
-          <th>No.</th>
-          <th>Quantity Sold</th>
-          <th>Date</th>
-          <th>Rating</th>
-          <th>Price (min)</th>
-          <th>Price (max)</th>
-          <th>Total Sales Count</th>
-          <th>Logistics Reliability</th> 
-          <th>Product</th>  
-          <th>Daily Sales Graph</th>
-        </tr>
-        {% for i in filtered %}
-        <tr>
-          <td>{{forloop.counter}}</td>
-          <td>{{i.quantitySold}}</td>
-          <td>{{i.date}}</td>
-          <td>{{i.product.rating}}</td>
-          <td>${{i.product.minPrice}}</td>
-          <td>${{i.product.maxPrice}}</td>
-          <td>{{i.product.totSalesCount}}</td>
-          <td>{{i.product.logisticsReliability}}</td>
-          <td><a href="https://www.aliexpress.com/item/{{i.product.productId}}.html" target="_blank">{{i.product.productTitle|truncatechars:35}}</a></td>
-          <td>Graph</td>
-        </tr>
-        {% endfor %}
-      </table>
-      <br>  
-      <br>  
-      <br>  
-      <br>  
-  </body>
-</html>
+  </script>
+{% endblock script_tag %}

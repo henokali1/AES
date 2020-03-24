@@ -311,10 +311,7 @@ def daily_sales_filter(request):
 		min_daily_sale = request.POST['min_daily_sale']
 		max_daily_sale = request.POST['max_daily_sale']
 		daterange = request.POST['daterange']
-		staring_date, end_date = daterange.split('-')
-		print('staring_date', staring_date, 'end_date',end_date)
-		# staring_date = request.POST['staring_date']
-		# end_date = request.POST['end_date']
+		staring_date, end_date = daterange.split(' - ')
 		sort_by = request.POST['sort_by']
 
 		args['rating'] = rating
@@ -326,8 +323,8 @@ def daily_sales_filter(request):
 		
 		args['min_daily_sale'] = min_daily_sale
 		args['max_daily_sale'] = max_daily_sale
-		# args['staring_date'] = staring_date
-		# args['end_date'] = end_date
+		args['staring_date'] = staring_date
+		args['end_date'] = end_date
 		args['sort_by'] = sort_by
 
 		ds = DailySale.objects.all()
@@ -347,17 +344,17 @@ def daily_sales_filter(request):
 			ds = ds.filter(quantitySold__gte=min_daily_sale)
 		if max_daily_sale != '':
 			ds = ds.filter(quantitySold__lte=max_daily_sale)
-		# if staring_date != '':
-		# 	ds = ds.filter(date__gte=staring_date)
-		# if end_date != '':
-		# 	ds = ds.filter(date__lte=end_date)
+		if staring_date != '':
+			ds = ds.filter(date__gte=staring_date)
+		if end_date != '':
+			ds = ds.filter(date__lte=end_date)
 
 		if sort_by == 'date':
 			ds = ds.order_by('-date')
 		else:
 			ds = ds.order_by('-quantitySold')
 
-		args['filtered'] = []
+		args['filtered'] = ds
 		args['tot'] = len(ds)
 		return render(request, 'pages/daily-sales-filter.html', args)
 	args['min_daily_sale'] = 50

@@ -108,12 +108,49 @@
           <div class="form-group col-sm-6">
             <label for="sort_by">Sort By</label>
             <select id="sort_by" name="sort_by" class="form-control">
+              {% if sort_by == 'rating' %}
+              <option value="def">---------</option>
+              <option selected="selected" value="rating">Rating</option>
+              <option value="minPrice">Price</option>
+              <option value="totSalesCount">Total Sales Count</option>
+              <option value="date">Date</option>
+              <option value="quantitySold">Daily Sale</option>
+              {% elif sort_by == 'minPrice' %}
+              <option value="def">---------</option>
+              <option value="rating">Rating</option>
+              <option selected="selected" value="minPrice">Price</option>
+              <option value="totSalesCount">Total Sales Count</option>
+              <option value="date">Date</option>
+              <option value="quantitySold">Daily Sale</option>
+              {% elif sort_by == 'totSalesCount' %}
+              <option value="def">---------</option>
+              <option value="rating">Rating</option>
+              <option value="minPrice">Price</option>
+              <option selected="selected" value="totSalesCount">Total Sales Count</option>
+              <option value="date">Date</option>
+              <option value="quantitySold">Daily Sale</option>
+              {% elif sort_by == 'date' %}
+              <option value="def">---------</option>
+              <option value="rating">Rating</option>
+              <option value="minPrice">Price</option>
+              <option value="totSalesCount">Total Sales Count</option>
+              <option selected="selected" value="date">Date</option>
+              <option value="quantitySold">Daily Sale</option>
+              {% elif sort_by == 'quantitySold' %}
+              <option value="def">---------</option>
+              <option value="rating">Rating</option>
+              <option value="minPrice">Price</option>
+              <option value="totSalesCount">Total Sales Count</option>
+              <option value="date">Date</option>
+              <option selected="selected" value="quantitySold">Daily Sale</option>
+              {% else %}
               <option selected="selected" value="def">---------</option>
               <option value="rating">Rating</option>
               <option value="minPrice">Price</option>
               <option value="totSalesCount">Total Sales Count</option>
               <option value="date">Date</option>
               <option value="quantitySold">Daily Sale</option>
+              {% endif %}
             </select>
           </div>
         </div>
@@ -126,41 +163,42 @@
 <b>
 
 
-<h1>Total: {{ tot }}</h1>  
+  
 
 <div id="linechart_material"></div>
+<center><h1>Total: {{ tot }}</h1></center>
+<br>
+<div class="card shadow-lg p-3 mb-5 bg-white rounded">
+  <table style="margin: 1rem;" class="table table-hover">
+      <tr>
+        <th>Quantity Sold</th>
+        <th>Date</th>
+        <th>Rating</th>
+        <th>Price (min)</th>
+        <th>Price (max)</th>
+        <th>Total Sales Count</th>
+        <th>Logistics Reliability</th> 
+        <th>Product</th>  
+        <th>Daily Sales Graph</th>
+      </tr>
+      {% for i in filtered %}
+      <tr>
+        <td>{{i.quantitySold}}</td>
+        <td>{{i.date}}</td>
+        <td>{{i.product.rating}}</td>
+        <td>${{i.product.minPrice}}</td>
+        <td>${{i.product.maxPrice}}</td>
+        <td>{{i.product.totSalesCount}}</td>
+        <td>{{i.product.logisticsReliability}}</td>
+        <td><a href="https://www.aliexpress.com/item/{{i.product.productId}}.html" target="_blank">{{i.product.productTitle|truncatechars:35}}</a></td>
+        <td>Graph</td>
+      </tr>
+      {% endfor %}
+    </table>
 
-
-<table>
-    <tr>
-      <th>No.</th>
-      <th>Quantity Sold</th>
-      <th>Date</th>
-      <th>Rating</th>
-      <th>Price (min)</th>
-      <th>Price (max)</th>
-      <th>Total Sales Count</th>
-      <th>Logistics Reliability</th> 
-      <th>Product</th>  
-      <th>Daily Sales Graph</th>
-    </tr>
-    {% for i in filtered %}
-    <tr>
-      <td>{{forloop.counter}}</td>
-      <td>{{i.quantitySold}}</td>
-      <td>{{i.date}}</td>
-      <td>{{i.product.rating}}</td>
-      <td>${{i.product.minPrice}}</td>
-      <td>${{i.product.maxPrice}}</td>
-      <td>{{i.product.totSalesCount}}</td>
-      <td>{{i.product.logisticsReliability}}</td>
-      <td><a href="https://www.aliexpress.com/item/{{i.product.productId}}.html" target="_blank">{{i.product.productTitle|truncatechars:35}}</a></td>
-      <td>Graph</td>
-    </tr>
-    {% endfor %}
-  </table>
+</div>
   <br>  
-  <br>  
+  <br> 
 {% endblock content %}
 
 {% block script_tag %}
@@ -168,6 +206,20 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 
 <script>
+  let sd = ''
+  let ed = ''
+  if(`{{staring_date}}` != ''){
+    sd = `{{staring_date}}`
+  } else {
+    sd = [moment().subtract(1, 'days'), moment().subtract(1, 'days')][0].format('YYYY-MM-DD')
+  }
+
+  if(`{{end_date}}` != ''){
+    ed = `{{end_date}}`
+  } else {
+    ed = [moment()][0].format('YYYY-MM-DD')
+  }
+  
   $('#date-range-selector').daterangepicker({
     ranges: {
         'Today': [moment(), moment()],
@@ -178,10 +230,11 @@
         'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
     },
     "alwaysShowCalendars": true,
-    "startDate": [moment().subtract(1, 'days').format('YYYY-MM-DD'), moment().subtract(1, 'days')][0]._d,
-    "endDate": [moment()][0]._d
-}, function(start, end, label) {
-  console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
+    "startDate": sd,
+    "endDate": ed,
+    'locale': {
+      format: 'YYYY-MM-DD'
+    }
 });
 
   </script>

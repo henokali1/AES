@@ -13,8 +13,17 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
 def vv_product_all(request):
+    srt_by = 'likes'
     args={}
-    all_products = VvProduct.objects.all().order_by('-likes')
+    if request.method == 'POST':
+        srt_by = request.POST['srt_by']
+        print(srt_by)
+    if request.method == 'GET':
+        try:
+            srt_by = request.GET['srt_by']
+        except:
+            pass
+    all_products = VvProduct.objects.all().order_by('-'+srt_by)
 
     page = request.GET.get('page', 1)
 
@@ -26,9 +35,7 @@ def vv_product_all(request):
     except EmptyPage:
         products = paginator.page(paginator.num_pages)
 
-    # products = products[0:12]
-    args['products'] = products
-
+    args['srt_by'] = srt_by
     args['len'] = len(products)
     args['products'] = products
     return render(request, 'vv_products/vv_product_all.html', args)

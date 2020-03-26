@@ -35,10 +35,95 @@ img video {
 {% endblock link_tag %}
 {% block content %}
 <div class="container"> 
+  <div class="card shadow-lg p-3 mb-5 bg-white rounded">
+    <div class="card-body">
+      <form method="POST">
+        {% csrf_token %}
+        <div class="form-row">
+          <div class="form-group col-sm-4">
+            <label for="srt_by">Sort By</label>
+              {% if srt_by == 'cogs' %}
+              <select id="srt_by" name="srt_by" class="form-control">
+                <option value="def">---------</option>
+                <option selected="selected" value="cogs">COGS</option>
+                <option value="price">Price</option>
+                <option value="profit">Profit</option>
+                <option value="likes">Likes</option>
+                <option value="comments">Comments</option>
+                <option value="redirects">Shares</option>
+              </select>
+              {% elif srt_by == 'price' %}
+              <select id="srt_by" name="srt_by" class="form-control">
+                <option value="def">---------</option>
+                <option value="cogs">COGS</option>
+                <option selected="selected" value="price">Price</option>
+                <option value="profit">Profit</option>
+                <option value="likes">Likes</option>
+                <option value="comments">Comments</option>
+                <option value="redirects">Shares</option>
+              </select>
+              {% elif srt_by == 'profit' %}
+              <select id="srt_by" name="srt_by" class="form-control">
+                <option value="def">---------</option>
+                <option value="cogs">COGS</option>
+                <option value="price">Price</option>
+                <option selected="selected" value="profit">Profit</option>
+                <option value="likes">Likes</option>
+                <option value="comments">Comments</option>
+                <option value="redirects">Shares</option>
+              </select>
+              {% elif srt_by == 'likes' %}
+              <select id="srt_by" name="srt_by" class="form-control">
+                <option value="def">---------</option>
+                <option value="cogs">COGS</option>
+                <option value="price">Price</option>
+                <option value="profit">Profit</option>
+                <option selected="selected" value="likes">Likes</option>
+                <option value="comments">Comments</option>
+                <option value="redirects">Shares</option>
+              </select>
+              {% elif srt_by == 'comments' %}
+              <select id="srt_by" name="srt_by" class="form-control">
+                <option value="def">---------</option>
+                <option value="cogs">COGS</option>
+                <option value="price">Price</option>
+                <option value="profit">Profit</option>
+                <option value="likes">Likes</option>
+                <option selected="selected" value="comments">Comments</option>
+                <option value="redirects">Shares</option>
+              </select>
+              {% elif srt_by == 'redirects' %}
+              <select id="srt_by" name="srt_by" class="form-control">
+                <option value="def">---------</option>
+                <option value="cogs">COGS</option>
+                <option value="price">Price</option>
+                <option value="profit">Profit</option>
+                <option value="likes">Likes</option>
+                <option value="comments">Comments</option>
+                <option selected="selected" value="redirects">Shares</option>
+              </select>
+              {% else %}
+              <select id="srt_by" name="srt_by" class="form-control">
+                <option selected="selected"  value="def">---------</option>
+                <option value="cogs">COGS</option>
+                <option value="price">Price</option>
+                <option value="profit">Profit</option>
+                <option value="likes">Likes</option>
+                <option value="comments">Comments</option>
+                <option value="redirects">Shares</option>
+              </select>
+              {% endif %}
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary pull-right">Sort</button>
+      </form>
+    </div>
+  </div>
     <div class="row">
         {% for product in products %}
         <div class="col-sm-12 col-md-6 col-lg-4">
-                <div class="card" style="margin-bottom: 2em;">
+                <div class="card shadow-lg p-3 mb-5 bg-white rounded" style="margin-bottom: 2em;">
                     <p style="padding-left: 1rem; padding-top: 1rem;">{{product.title}}</p>
                     <a href="/vv-product/{{product.pk}}/" target="_blank"><img class="card-img-top" src="{{product.product_image}}" alt="Card image" style="width:100%"></a>
                     <div class="card-body">
@@ -56,42 +141,31 @@ img video {
     <center>
       <br>
       <br>
-      {% if products.has_other_pages %}
-      <nav aria-label="Page navigation example">
-        <ul class="pagination">
-          {% if products.has_previous %}
-         <li class="page-item"><a class="page-link" href="?page={{ products.previous_page_number }}">Previous</a></li>
-        {% else %}
-          <li class="page-item disabled"><a class="page-link">Previous</a></li>
-        {% endif %}
-        {% if products.has_next %}
-          <li class="page-item"><a class="page-link" href="?page={{ products.next_page_number }}">Next</a></li>
-        {% else %}
-        <li class="page-item disabled"><a class="page-link" href="#">Next</a></li>
-        {% endif %}
-      </ul>
-    </nav>
-    {% endif %}
-      <br>
-      <br>
     </center>
+
+    
     {% if products.has_other_pages %}
-    <nav aria-label="Page navigation example">
-      <ul class="pagination">
+    <nav>
+      <ul class="pagination justify-content-center">
         {% if products.has_previous %}
-       <li class="page-item"><a class="page-link" href="?page={{ products.previous_page_number }}">Previous</a></li>
+       <li class="page-item"><a class="page-link" href="?page={{ products.previous_page_number }}&srt_by={{srt_by}}">Previous</a></li>
       {% else %}
         <li class="page-item disabled"><a class="page-link">Previous</a></li>
       {% endif %}
       {% for i in products.paginator.page_range %}
+      
+        {% if i <= products.number|add:5 and i >= products.number|add:-5 %}
         {% if products.number == i %}
         <li class="page-item active"><a class="page-link" href="#"><span>{{ i }} <span class="sr-only">(current)</span></span></a></li>
         {% else %}
-          <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+        <li  class="page-item" ><a class="page-link" href="?page={{forloop.counter}}&srt_by={{srt_by}}">{{forloop.counter}}</a></li>
         {% endif %}
+        {% endif %}
+
+        
       {% endfor %}
       {% if products.has_next %}
-        <li class="page-item"><a class="page-link" href="?page={{ products.next_page_number }}">Next</a></li>
+        <li class="page-item"><a class="page-link" href="?page={{ products.next_page_number }}&srt_by={{srt_by}}">Next</a></li>
       {% else %}
       <li class="page-item disabled"><a class="page-link" href="#">Next</a></li>
       {% endif %}

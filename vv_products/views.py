@@ -10,6 +10,8 @@ import datetime
 from statistics import variance, mean
 import concurrent.futures
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.http import JsonResponse
+
 
 
 def vv_product_all(request):
@@ -44,3 +46,8 @@ def vv_product(request, pk):
     product = VvProduct.objects.all().filter(pk=pk)[0]
     args = {'product': product}
     return render(request, 'vv_products/vv_product.html', args)
+
+def fav(request, pk, is_fav):
+    val = True if (is_fav == 'True') else False
+    VvProduct.objects.filter(pk=pk).update(is_fav=val)
+    return JsonResponse({'is_fav':str(val)})

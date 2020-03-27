@@ -10,7 +10,7 @@ img video {
     width:auto;
     height:auto;
 }
-.btn {
+/* .btn {
     background-color: DodgerBlue;
     border: none;
     color: white;
@@ -27,10 +27,9 @@ img video {
     cursor: pointer;
 }
 
-/* Darker background on mouse-over */
 .btn:hover {
     background-color: RoyalBlue;
-}
+} */
 </style>
 {% endblock link_tag %}
 {% block content %}
@@ -124,6 +123,14 @@ img video {
         {% for product in products %}
         <div class="col-sm-12 col-md-6 col-lg-4">
                 <div class="card shadow-lg p-3 mb-5 bg-white rounded" style="margin-bottom: 2em;">
+                  <div>
+                    {% if product.is_fav %}
+                      <i id="{{product.pk}}" onclick="fav(`{{product.pk}}`)" class="fa fa-heart"></i>
+                    {% else %}
+                      <i id="{{product.pk}}" onclick="fav(`{{product.pk}}`)" class="fa fa-heart-o"></i>
+                    {% endif %}
+                  </div>
+                  <div><button class="btn btn-lg"></button></div>
                     <p style="padding-left: 1rem; padding-top: 1rem;">{{product.title}}</p>
                     <a href="/vv-product/{{product.pk}}/" target="_blank"><img class="card-img-top" src="{{product.product_image}}" alt="Card image" style="width:100%"></a>
                     <div class="card-body">
@@ -143,18 +150,20 @@ img video {
       <br>
     </center>
 
-    
+
     {% if products.has_other_pages %}
     <nav>
       <ul class="pagination justify-content-center">
         {% if products.has_previous %}
+        <li class="page-item "><a class="page-link" href="?page=1&srt_by={{srt_by}}"><<</a></li>
        <li class="page-item"><a class="page-link" href="?page={{ products.previous_page_number }}&srt_by={{srt_by}}">Previous</a></li>
       {% else %}
+      <li class="page-item disabled"><a class="page-link" href="?page=1&srt_by={{srt_by}}"><<</a></li>
         <li class="page-item disabled"><a class="page-link">Previous</a></li>
       {% endif %}
       {% for i in products.paginator.page_range %}
       
-        {% if i <= products.number|add:5 and i >= products.number|add:-5 %}
+        {% if i <= products.number|add:9 and i >= products.number|add:-9 %}
         {% if products.number == i %}
         <li class="page-item active"><a class="page-link" href="#"><span>{{ i }} <span class="sr-only">(current)</span></span></a></li>
         {% else %}
@@ -165,12 +174,40 @@ img video {
         
       {% endfor %}
       {% if products.has_next %}
+      <li class="page-item"><a class="page-link" href="?page={{products.paginator.num_pages}}&srt_by={{srt_by}}">>></a></li>
         <li class="page-item"><a class="page-link" href="?page={{ products.next_page_number }}&srt_by={{srt_by}}">Next</a></li>
       {% else %}
       <li class="page-item disabled"><a class="page-link" href="#">Next</a></li>
+      <li class="page-item disabled"><a class="page-link" href="?page={{products.paginator.num_pages}}&srt_by={{srt_by}}">>></a></li>
       {% endif %}
     </ul>
   </nav>
   {% endif %}
 </div>
 {% endblock content %}
+
+{% block script_tag %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<script>
+  function fav(pk){
+    tt = $( "#"+pk )
+    isfav = 'False'
+    if (tt.hasClass('fa-heart-o')) {
+        tt.removeClass('fa-heart-o');
+        tt.addClass('fa-heart');
+        isfav = 'True'
+    } else {
+        tt.removeClass('fa-heart');
+        tt.addClass('fa-heart-o');
+        isfav = 'False'
+    }
+
+    base_url = window.location.origin;
+    url = base_url + '/vv-product/fav/'+pk+'/'+isfav+'/'
+    $.get(url, function(data, status){
+      console.log("Data: " + data + "\nStatus: " + status);
+    });
+  }
+</script>
+{% endblock script_tag %}

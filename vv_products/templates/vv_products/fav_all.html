@@ -10,26 +10,7 @@ img video {
     width:auto;
     height:auto;
 }
-/* .btn {
-    background-color: DodgerBlue;
-    border: none;
-    color: white;
-    padding: 12px 16px;
-    font-size: 16px;
-    cursor: pointer;
-}
-.infbtn {
-    background-color: rgb(232, 236, 231);
-    border: none;
-    color: rgb(31, 27, 27);
-    padding: 12px 16px;
-    font-size: 16px;
-    cursor: pointer;
-}
 
-.btn:hover {
-    background-color: RoyalBlue;
-} */
 </style>
 {% endblock link_tag %}
 {% block content %}
@@ -115,7 +96,7 @@ img video {
             </div>
         </div>
 
-        <button type="submit" class="btn btn-primary pull-right">Sort</button>
+        <!-- <button type="submit" class="btn btn-primary pull-right">Sort</button> -->
       </form>
     </div>
   </div>
@@ -188,7 +169,15 @@ img video {
 
 {% block script_tag %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-
+<script>
+  $("#srt_by").change(function () {
+      srt_by = $(this).val()
+      base_url = window.location;
+      pg = base_url.search.split('&')[0]
+      url = base_url.origin + '/vv-product/fav-all/' + pg + '&srt_by=' + srt_by
+      window.open(url,"_self")
+  });
+</script>
 <script>
   function fav(pk){
     tt = $( "#"+pk )

@@ -35,6 +35,7 @@ class VvProduct(models.Model):
     amazon1_url = models.TextField(default='')
     amazon2_url = models.TextField(default='')
     is_fav = models.BooleanField(default=False)
+    tags = models.TextField(default='')
 
     def __str__(self):
         return str(self.pk) + ' - ' + self.title

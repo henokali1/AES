@@ -51,3 +51,31 @@ def fav(request, pk, is_fav):
     val = True if (is_fav == 'True') else False
     VvProduct.objects.filter(pk=pk).update(is_fav=val)
     return JsonResponse({'is_fav':str(val)})
+
+def fav_all(request):
+    srt_by = 'likes'
+    args={}
+    if request.method == 'POST':
+        srt_by = request.POST['srt_by']
+        print(srt_by)
+    if request.method == 'GET':
+        try:
+            srt_by = request.GET['srt_by']
+        except:
+            pass
+    all_products = VvProduct.objects.all().filter(is_fav=True).order_by('-'+srt_by)
+
+    page = request.GET.get('page', 1)
+
+    paginator = Paginator(all_products, 12)
+    try:
+        products = paginator.page(page)
+    except PageNotAnInteger:
+        products = paginator.page(1)
+    except EmptyPage:
+        products = paginator.page(paginator.num_pages)
+
+    args['srt_by'] = srt_by
+    args['len'] = len(products)
+    args['products'] = products
+    return render(request, 'vv_products/fav_all.html', args)

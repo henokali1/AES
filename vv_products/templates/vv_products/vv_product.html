@@ -21,6 +21,13 @@ img video {
         <br>
         <div class="col-sm-col-sm-12 col-md-6">
             <div class="card" style="margin-bottom: 2em;">
+              <div style="padding-left: 1rem; padding-top: 1rem;">
+                {% if product.is_fav %}
+                  <i id="{{product.pk}}" onclick="fav(`{{product.pk}}`)" class="fa fa-heart"></i>
+                {% else %}
+                  <i id="{{product.pk}}" onclick="fav(`{{product.pk}}`)" class="fa fa-heart-o"></i>
+                {% endif %}
+              </div>
                 <p style="padding-left: 1rem; padding-top: 1rem;">{{product.title}}</p>
                 {% if product.video_thumbnail != '' and product.video != '' %}
                 <video controls poster="{{product.video_thumbnail}}" style="width:100%">
@@ -177,15 +184,40 @@ img video {
 {% endblock content %}
 
 {% block script_tag %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
 <script>
-    function textToClipboard (text) {
-        var dummy = document.createElement("textarea");
-        document.body.appendChild(dummy);
-        dummy.value = text;
-        dummy.select();
-        document.execCommand("copy");
-        document.body.removeChild(dummy);
-        console.log('copied: ',text)
+  function fav(pk){
+    tt = $( "#"+pk )
+    isfav = 'False'
+    if (tt.hasClass('fa-heart-o')) {
+        tt.removeClass('fa-heart-o');
+        tt.addClass('fa-heart');
+        isfav = 'True'
+    } else {
+        tt.removeClass('fa-heart');
+        tt.addClass('fa-heart-o');
+        isfav = 'False'
     }
+
+    base_url = window.location.origin;
+    url = base_url + '/vv-product/fav/'+pk+'/'+isfav+'/'
+    $.get(url, function(data, status){
+      console.log("Data: " + data + "\nStatus: " + status);
+    });
+  }
 </script>
+
+<script>
+  function textToClipboard (text) {
+      var dummy = document.createElement("textarea");
+      document.body.appendChild(dummy);
+      dummy.value = text;
+      dummy.select();
+      document.execCommand("copy");
+      document.body.removeChild(dummy);
+      console.log('copied: ',text)
+  }
+</script>
+
 {% endblock script_tag %}

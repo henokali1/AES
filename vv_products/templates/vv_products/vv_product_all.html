@@ -115,7 +115,6 @@ img video {
             </div>
         </div>
 
-        <button type="submit" class="btn btn-primary pull-right">Sort</button>
       </form>
     </div>
   </div>
@@ -188,6 +187,15 @@ img video {
 
 {% block script_tag %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>
+  $("#srt_by").change(function () {
+      srt_by = $(this).val()
+      base_url = window.location;
+      pg = base_url.search.split('&')[0]
+      url = base_url.origin + '/vv-product/all/' + pg + '&srt_by=' + srt_by
+      window.open(url,"_self")
+  });
+</script>
 
 <script>
   function fav(pk){

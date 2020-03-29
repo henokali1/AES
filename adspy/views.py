@@ -20,16 +20,20 @@ def fbads(request):
 
 def all_ads(request):
     args = {}
+    filter_opt = 'likeNum'
     if request.method == 'POST':
         filter_opt = request.POST['filter_opt']
-        args['filter']=filter_opt
+        
         if filter_opt == 'no_filter':
-            all_ads = Ad.objects.all().order_by('-likeNum')
-        else:
-            all_ads = Ad.objects.all().order_by('-' + filter_opt)
-        print('filter_opt:',filter_opt)
-    else:
-        all_ads = Ad.objects.all().order_by('-likeNum')
+            filter_opt = 'likeNum'
+
+    if request.method == 'GET':
+        try:
+            filter_opt = request.GET['filter_opt']
+        except:
+            filter_opt = 'likeNum'
+    
+    all_ads = Ad.objects.all().order_by('-'+filter_opt)
     
     # all_ads = User.objects.all()
     page = request.GET.get('page', 1)
@@ -44,4 +48,5 @@ def all_ads(request):
 
     # ads = all_ads[0:12]
     args['ads'] = ads
+    args['filter'] = filter_opt
     return render(request, 'fbads/all-ads.html', args)

@@ -102,7 +102,7 @@ def add_vv_product_to_django_db():
         new_vv_p.amazon1 = '' if db[p]['amazon1'] == None else db[p]['amazon1']
         new_vv_p.amazon2 = '' if db[p]['amazon2'] == None else db[p]['amazon2']
         new_vv_p.competitor_store = '' if db[p]['competitor_store'] == None else db[p]['competitor_store']
-        new_vv_p.aliexpress_data = '[]' if db[p]['aliexpress_data'] == None else db[p]['aliexpress_data']
+        new_vv_p.aliexpress_data = '[]' if db[p]['aliexpress_data'] == None else db[p]['aliexpress_data'],
         new_vv_p.images = '' if db[p]['images'] == None else db[p]['images']
         new_vv_p.ad_creative = '' if db[p]['ad_creative'] == None else db[p]['ad_creative']
 
@@ -172,45 +172,99 @@ def add_sp_products_to_db():
     for chnk in db:
         for idx, p in enumerate(db[chnk]):
             print(chnk, idx)
-            new_sp_product = SpProduct()
+            try:
+                new_sp_product = SpProduct()
 
-            new_sp_product.sp_id = p['id']
-            new_sp_product.title = p['title']
-            new_sp_product.formatted_price = p['formatted_price']
-            new_sp_product.formatted_msrp = p['formatted_msrp']
-            new_sp_product.image_cover_thumb_url = p['image_cover_thumb_url']
-            new_sp_product.image_cover_url = p['image_cover_url']
-            new_sp_product.listing_category_id = p['listing_category_id']
-            new_sp_product.category_name = p['category_name']
-            new_sp_product.collection_ids = p['collection_ids']
-            new_sp_product.price_min_cents = p['price_min_cents']
-            new_sp_product.price_max_cents = p['price_max_cents']
-            new_sp_product.country_origin = p['country_origin']
-            new_sp_product.shipping_exclusions = p['shipping_exclusions']
-            new_sp_product.shipping_specific_countries = p['shipping_specific_countries']
-            new_sp_product.shipping_countries = p['shipping_countries']
-            new_sp_product.ships_internationally = p['ships_internationally']
-            new_sp_product.state_origin = p['state_origin']
-            new_sp_product.sp_tags = p['tags']
-            new_sp_product.supplier_shop_name = p['supplier_shop_name']
-            new_sp_product.trending_until = p['trending_until']
-            new_sp_product.premium = p['premium']
-            new_sp_product.best_selling = p['best_selling']
-            new_sp_product.location = p['location']
-            new_sp_product.activated_at = p['activated_at']
-            new_sp_product.is_customizable = p['is_customizable']
-            new_sp_product.is_handmade = p['is_handmade']
-            new_sp_product.is_ethically_sourced = p['is_ethically_sourced']
-            new_sp_product.total_inventory = p['total_inventory']
-            new_sp_product.manufacturer_origin_country = p['manufacturer_origin_country']
-            new_sp_product.percentage_from_retail_to_best_price = p['percentage_from_retail_to_best_price']
-            new_sp_product.percentage_from_base_to_best_price = p['percentage_from_base_to_best_price']
-            new_sp_product.is_discounted = p['is_discounted']
-            new_sp_product.formatted_slashed_price = p['formatted_slashed_price']
-            new_sp_product.pushed_count = p['pushed_count']
-            new_sp_product.free_usa_shipping = p['free_usa_shipping']
+                new_sp_product.sp_id = p['id']
+                new_sp_product.title = p['title']
+                new_sp_product.formatted_price = p['formatted_price']
+                new_sp_product.formatted_msrp = p['formatted_msrp']
+                new_sp_product.image_cover_thumb_url = p['image_cover_thumb_url']
+                new_sp_product.image_cover_url = p['image_cover_url']
+                new_sp_product.listing_category_id = p['listing_category_id']
+                new_sp_product.category_name = p['category_name']
+                new_sp_product.collection_ids = p['collection_ids']
+                new_sp_product.price_min_cents = p['price_min_cents']
+                new_sp_product.price_max_cents = p['price_max_cents']
+                new_sp_product.country_origin = p['country_origin']
+                new_sp_product.shipping_exclusions = p['shipping_exclusions']
+                new_sp_product.shipping_specific_countries = p['shipping_specific_countries']
+                new_sp_product.shipping_countries = p['shipping_countries']
+                new_sp_product.ships_internationally = p['ships_internationally']
+                new_sp_product.state_origin = p['state_origin']
+                new_sp_product.state_origin = '' if ((p['state_origin'] == None) or (p['state_origin'] == '')) else p['state_origin']
+                new_sp_product.sp_tags = p['tags']
+                new_sp_product.supplier_shop_name = p['supplier_shop_name']
+                new_sp_product.trending_until = '' if ((p['trending_until'] == None) or (p['trending_until'] == '')) else p['trending_until']
+                new_sp_product.premium = p['premium']
+                new_sp_product.best_selling = p['best_selling']
+                new_sp_product.location = p['location']
+                new_sp_product.activated_at = p['activated_at']
+                new_sp_product.is_customizable = p['is_customizable']
+                new_sp_product.is_handmade = p['is_handmade']
+                new_sp_product.is_ethically_sourced = p['is_ethically_sourced']
+                new_sp_product.total_inventory = p['total_inventory']
+                new_sp_product.manufacturer_origin_country = '' if ((p['manufacturer_origin_country'] == None) or (p['manufacturer_origin_country'] == '')) else p['manufacturer_origin_country']
+                new_sp_product.percentage_from_retail_to_best_price = p['percentage_from_retail_to_best_price']
+                new_sp_product.percentage_from_base_to_best_price = p['percentage_from_base_to_best_price']
+                new_sp_product.is_discounted = p['is_discounted']
+                new_sp_product.formatted_slashed_price = '' if ((p['formatted_slashed_price'] == None) or (p['formatted_slashed_price'] == '')) else p['formatted_slashed_price']
+                new_sp_product.pushed_count = p['pushed_count']
+                new_sp_product.free_usa_shipping = p['free_usa_shipping']
+                new_sp_product.free_usa_shipping = False if (type(p['free_usa_shipping']) != bool) else p['free_usa_shipping']
 
-            new_sp_product.save()
+                new_sp_product.save()
+            except:
+                print('Err', chnk, idx)
 
+def d_types():
+    dt={
+        'id':[],
+        'title':[],
+        'formatted_price':[],
+        'formatted_msrp':[],
+        'image_cover_thumb_url':[],
+        'image_cover_url':[],
+        'listing_category_id':[],
+        'category_name':[],
+        'collection_ids':[],
+        'price_min_cents':[],
+        'price_max_cents':[],
+        'country_origin':[],
+        'shipping_exclusions':[],
+        'shipping_specific_countries':[],
+        'shipping_countries':[],
+        'ships_internationally':[],
+        'state_origin':[],
+        'tags':[],
+        'supplier_shop_name':[],
+        'trending_until':[],
+        'premium':[],
+        'best_selling':[],
+        'location':[],
+        'activated_at':[],
+        'is_customizable':[],
+        'is_handmade':[],
+        'is_ethically_sourced':[],
+        'total_inventory':[],
+        'manufacturer_origin_country':[],
+        'percentage_from_retail_to_best_price':[],
+        'percentage_from_base_to_best_price':[],
+        'is_discounted':[],
+        'formatted_slashed_price':[],
+        'pushed_count':[],
+        'free_usa_shipping':[],
+    }
+    for chnk in db:
+        for p in db[chnk]:
+            for i in p:
+                dtpe = str(type(p[i]))
+                if (dtpe in dt[i]):
+                    pass
+                else:
+                    dt[i].append(dtpe)
+                    # print(dtpe)
+    return dt
+
+# er=d_types()
 add_sp_products_to_db()
-    

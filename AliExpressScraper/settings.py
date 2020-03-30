@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'vv_products',
     'adspy',
     'fb',
+    'sp_products',
 ]
 
 MIDDLEWARE = [

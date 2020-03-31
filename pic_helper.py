@@ -166,7 +166,7 @@ def fb_int_db():
         new_int.save()
 
 
-db = read_db()
+# db = read_db()
 
 def add_sp_products_to_db():
     for chnk in db:
@@ -267,4 +267,4 @@ def d_types():
     return dt
 
 # er=d_types()
-add_sp_products_to_db()
+# add_sp_products_to_db()

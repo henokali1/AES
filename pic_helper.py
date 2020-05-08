@@ -268,3 +268,25 @@ def d_types():
 
 # er=d_types()
 # add_sp_products_to_db()
+
+def delivery_time_sp(dt):
+    sp = dt.split('-')
+    shipping_min = int(sp[0])
+    shipping_max = int(sp[1])
+    return shipping_min, shipping_max
+
+done = []
+err = []
+non_us = []
+def us_shipping_info():
+    all_pr = SpProduct.objects.all()
+    tot = len(all_pr)
+    cntr = 0
+    for product in all_pr:
+        sfus = False
+        if product.country_origin == 'United States':
+            sfus = True
+        SpProduct.objects.filter(pk=product.pk).update(ships_from_us=sfus)
+
+        cntr += 1
+        print(tot - cntr)

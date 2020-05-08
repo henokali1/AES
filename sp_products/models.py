@@ -39,6 +39,12 @@ class SpProduct(models.Model):
     formatted_slashed_price = models.CharField(max_length=255, default='')
     pushed_count = models.IntegerField(default=0)
     free_usa_shipping = models.BooleanField(default=False)
+    is_fav = models.BooleanField(default=False)
+    ships_from_us = models.BooleanField(default=False)
+    us_delivery_time_min = models.IntegerField(default=0)
+    us_delivery_time_max = models.IntegerField(default=0)
+    us_shipping_price_cents = models.FloatField(default=0.0)
+    us_shipping_price_formatted = models.CharField(default='', max_length=254)
 
     def __str__(self):
         return str(self.pushed_count) + ' - ' + self.title

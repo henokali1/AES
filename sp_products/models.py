@@ -1,4 +1,6 @@
 from django.db import models
+from django.utils import timezone
+import pytz
 
 
 class SpProduct(models.Model):
@@ -40,3 +42,11 @@ class SpProduct(models.Model):
 
     def __str__(self):
         return str(self.pushed_count) + ' - ' + self.title
+
+class SpDailySale(models.Model):
+    sp_id = models.CharField(max_length=255, default='')
+    total_inventory = models.IntegerField(default=0)
+    date = models.DateTimeField(default=timezone.now(), blank=False)
+
+    def __str__(self):
+        return str(self.date) + ' - ' + str(self.total_inventory)

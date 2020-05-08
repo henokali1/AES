@@ -6,3 +6,4 @@ admin.site.site_title = "Admin Portal"
 
 
 admin.site.register(SpProduct)
+admin.site.register(SpDailySale)

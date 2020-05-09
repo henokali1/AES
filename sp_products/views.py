@@ -13,6 +13,9 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import JsonResponse
 
 
+def tst(request):
+	return JsonResponse({'one':'1', 'two':'2', 'three':'3'})
+
 def sp_products_all(request):
 	srt_by = 'pushed_count'
 	args={}

@@ -39,7 +39,8 @@ headers = {
 
 suc = 0
 err = 0
-for p in range(667,10000,1):
+nw = []
+for p in range(1,700,1):
     page = p
     url = 'https://newapi.spocket.co/dropshippers/listings?keywords=&category=&category_id=&min_price=&max_price=&ships_from=&ships_to=&supplier_name=&sort_by=&premium=&ethically_sourced=&origin_usa=&high_inventory=&under_5_dollar=&free_usa_shipping=&minimum_inventory=&collection_id=&page={}&seed=1588890078180'.format(page)
 
@@ -60,6 +61,7 @@ for p in range(667,10000,1):
 
             if created:
                 print('SP Product Sales Data Saved.')
+                nw.append(i['id'])
             else:
                 print('SP Product Sales Data Already Exists')
             suc += 1

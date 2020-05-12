@@ -73,3 +73,4 @@ def update_sp_daily_sale():
 
     print('Suc', suc)
     print('Err', err)
+update_sp_daily_sale()

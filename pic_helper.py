@@ -5,8 +5,11 @@ import django
 django.setup()
 from django.core.wsgi import get_wsgi_application
 from sp_products.models import *
+from vv_products.models import * 
+from adspy.models import *
 
 import pickle
+import webbrowser
 
 import urllib.parse
 import ast
@@ -290,3 +293,21 @@ def us_shipping_info():
 
         cntr += 1
         print(tot - cntr)
+
+def ad_spy_search(q):
+    d = Ad.objects.filter(text__icontains=q).distinct()
+    for i in d:
+        inp = input("Press o to open URL:    ")
+        if inp == 'o':
+            print('https://app.adspy.com/ads/{}/'.format(i.asy_id))
+            webbrowser.open_new('https://app.adspy.com/ads/{}/'.format(i.asy_id))
+        
+
+def vv_search(q):
+    d = VvProduct.objects.filter(title__icontains=q).distinct()
+    print('{} Results Found'.format(len(d)))
+    for i in d:
+        inp = input("Press o to open URL:    ")
+        if inp == 'o':
+            print('http://54.162.193.161:4949/vv-product/{}/'.format(i.pk))
+            webbrowser.open_new('http://54.162.193.161:4949/vv-product/{}/'.format(i.pk))

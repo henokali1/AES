@@ -56,3 +56,12 @@ class SpDailyInv(models.Model):
 
     def __str__(self):
         return str(self.date) + ' - ' + str(self.total_inventory)
+
+# SP DAILY SALES RECORD
+class SpPrDailySale(models.Model):
+	date = models.DateField(default=timezone.now())
+	quantitySold = models.IntegerField(default=0)
+	sp_id = models.CharField(max_length=255, default='')
+
+	def __str__(self):
+		return self.sp_id + ' - ' + str(self.quantitySold)

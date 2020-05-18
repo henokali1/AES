@@ -52,7 +52,7 @@ class SpProduct(models.Model):
 class SpDailyInv(models.Model):
     sp_id = models.CharField(max_length=255, default='')
     total_inventory = models.IntegerField(default=0)
-    date = models.DateTimeField(default=timezone.now(), blank=False)
+    date = models.DateField(default=timezone.now(), blank=False)
 
     def __str__(self):
         return str(self.date) + ' - ' + str(self.total_inventory)

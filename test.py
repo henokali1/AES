@@ -174,4 +174,11 @@ def update_sp_daily_sale():
     print('Suc', suc)
     print('Err', err)
 
-update_sp_daily_sale()
+# update_sp_daily_sale()
+
+def anaSales():
+    d=SpPrDailySale.objects.filter(quantitySold__gte=50).order_by('-quantitySold')
+    for i in d:
+        print(i.quantitySold, "https://app.spocket.co/search?listing_id={}".format(i.sp_id))
+
+anaSales()

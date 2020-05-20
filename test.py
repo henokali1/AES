@@ -181,4 +181,4 @@ def anaSales():
     for i in d:
         print(i.quantitySold, "https://app.spocket.co/search?listing_id={}".format(i.sp_id))
 
-anaSales()
+# anaSales()

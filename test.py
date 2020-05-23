@@ -108,7 +108,7 @@ def one_pg_req():
     return d
 # update_sp_daily_sale()
 
-def update_sp_daily_sale(sp):
+def update_sp_daily_sale():
     headers = {
         'accept': 'application/json',
         'Accept-Encoding': 'gzip, deflate, br',
@@ -129,7 +129,7 @@ def update_sp_daily_sale(sp):
     suc = 0
     err = 0
     nw = []
-    for p in range(sp,700,1):
+    for p in range(642,700,1):
         page = p
         url = 'https://newapi.spocket.co/dropshippers/listings?keywords=&category=&category_id=&min_price=&max_price=&ships_from=&ships_to=&supplier_name=&sort_by=&premium=&ethically_sourced=&origin_usa=&high_inventory=&under_5_dollar=&free_usa_shipping=&minimum_inventory=&collection_id=&page={}&seed=1588890078180'.format(page)
 
@@ -177,10 +177,8 @@ def update_sp_daily_sale(sp):
 # update_sp_daily_sale()
 
 def anaSales():
-    d=SpPrDailySale.objects.filter(quantitySold__gte=50, date=datetime.date.today()).order_by('-quantitySold')
+    d=SpPrDailySale.objects.filter(quantitySold__gte=50).order_by('-quantitySold')
     for i in d:
-        print(i.quantitySold)
-        print("https://app.spocket.co/search?listing_id={}".format(i.sp_id))
+        print(i.quantitySold, "https://app.spocket.co/search?listing_id={}".format(i.sp_id))
 
-anaSales()
-# update_sp_daily_sale(1)
+# anaSales()

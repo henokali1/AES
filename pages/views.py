@@ -142,19 +142,28 @@ def save_products(request, products):
 	# raw_products = urllib.parse.unquote(request.get_full_path())[15:-1]
 	# products_dict = ast.literal_eval(raw_products)
 	# print(raw_products)
-	products_dict = ast.literal_eval(base64.b64decode(products).decode('utf-8'))
-	for product in products_dict:
-		prod = products_dict[product]
-		new_product, created = Product.objects.get_or_create(
-				productId = product,
-				productTitle = products_dict[product],
-			)
+	# products_dict = ast.literal_eval(base64.b64decode(products).decode('utf-8'))
+	# for product in products_dict:
+	# 	prod = products_dict[product]
+	# 	new_product, created = Product.objects.get_or_create(
+	# 			productId = product,
+	# 			productTitle = products_dict[product],
+	# 		)
 
-		if created:
-			print('Product Saved.')
-		else:
-			print('Product Already Exists')
-
+	# 	if created:
+	# 		print('Product Saved.')
+	# 	else:
+	# 		print('Product Already Exists')
+	print('Last sales tot: ',products)
+	last_sales_tot = int(products)
+	if last_sales_tot <= 500:
+		with open("C:/Users/henokali1/Documents/Projects/AES/stat.txt", "w") as f:
+			f.write('nc') 
+			print('next cat')
+	if last_sales_tot > 500:
+		with open("C:/Users/henokali1/Documents/Projects/AES/stat.txt", "w") as f:
+			f.write('np') 
+			print('next page')
 	args={'products':'Saved'}
 	return render(request, 'pages/save_products.html', args)
 

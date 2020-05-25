@@ -96,7 +96,7 @@ urllib3==1.22
 virtualenv==16.5.0
 virtualenv-clone==0.5.3
 websocket-client==0.56.0
-Werkzeug==0.14.1
+Werkzeug==0.15.3
 youtube-dl==2019.8.2
 zope.component==4.3.0
 zope.event==4.2.0

@@ -309,5 +309,5 @@ def vv_search(q):
     for i in d:
         inp = input("Press o to open URL:    ")
         if inp == 'o':
-            print('http://54.162.193.161:4949/vv-product/{}/'.format(i.pk))
-            webbrowser.open_new('http://54.162.193.161:4949/vv-product/{}/'.format(i.pk))
+            print('http://54.162.145.77:4949/vv-product/{}/'.format(i.pk))
+            webbrowser.open_new('http://54.162.145.77:4949/vv-product/{}/'.format(i.pk))

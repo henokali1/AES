@@ -256,10 +256,10 @@ def daily_sales_helper(productId):
 
 def update_daily_sales_record(request):
 	t = time.time()
-	min_order_count = 10000
-	# products = Product.objects.filter(totSalesCount__gte=min_order_count).values_list('productId')
+	min_order_count = 5000
+	products = Product.objects.filter(totSalesCount__gte=min_order_count).values_list('productId')
 
-	products = Product.objects.filter(totSalesCount__lte=9999, totSalesCount__gte=5000).values_list('productId')
+	# products = Product.objects.filter(totSalesCount__lte=9999, totSalesCount__gte=5000).values_list('productId')
 	# products = Product.objects.filter(totSalesCount=0.0).values_list('productId')
 	# products = Product.objects.all().values_list('productId')
 	product_ids = [i[0] for i in products]

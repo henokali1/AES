@@ -145,18 +145,21 @@ def update_sp_daily_sale(sp):
                 sp_id = i['id']
                 prev_inv = SpDailyInv.objects.filter(sp_id=sp_id)[0].total_inventory
                 cur_inv = i['total_inventory']
-                quantitySold = abs(prev_inv - cur_inv)
-                
-                new_d_sale, created = SpPrDailySale.objects.get_or_create(
-                    sp_id = sp_id,
-                    quantitySold = quantitySold,
-                )
-
-                if created:
-                    print('SP Product Sales Data Saved.', quantitySold, sp_id)
-                    nw.append(i['id'])
+                if(prev_inv > cur_inv):
+                    quantitySold = prev_inv - cur_inv
                 else:
-                    print('SP Product Sales Data Already Exists')
+                    quantitySold = 0
+                
+                if quantitySold > 0:
+                    new_d_sale, created = SpPrDailySale.objects.get_or_create(
+                        sp_id = sp_id,
+                        quantitySold = quantitySold,
+                    )
+
+                    if created:
+                        print('SP Product Sales Data Saved.', quantitySold, sp_id)
+                        nw.append(i['id'])
+                print(sp_id, quantitySold)
                 suc += 1
             except:
                 print('Err: ', i['id'])

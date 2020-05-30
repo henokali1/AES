@@ -159,7 +159,7 @@ def update_sp_daily_sale(sp):
                     if created:
                         print('SP Product Sales Data Saved.', quantitySold, sp_id)
                         nw.append(i['id'])
-                print(sp_id, quantitySold)
+                print("Sales", sp_id, quantitySold)
                 suc += 1
             except:
                 print('Err: ', i['id'])
@@ -185,5 +185,5 @@ def anaSales():
         print(i.quantitySold)
         print("https://app.spocket.co/search?listing_id={}".format(i.sp_id))
 
-# anaSales()
-update_sp_daily_sale(1)
+anaSales()
+# update_sp_daily_sale(497)

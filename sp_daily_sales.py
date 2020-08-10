@@ -185,5 +185,6 @@ def anaSales():
         print(i.quantitySold)
         print("https://app.spocket.co/search?listing_id={}".format(i.sp_id))
 
+
+# update_sp_daily_sale(1)
 anaSales()
-# update_sp_daily_sale(497)

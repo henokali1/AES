@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'adspy',
     'fb',
     'sp_products',
+    'watchcount',
 ]
 
 MIDDLEWARE = [

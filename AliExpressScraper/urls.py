@@ -10,4 +10,5 @@ urlpatterns = [
     path('adspy/', include('adspy.urls')),
     path('fb/', include('fb.urls')),
     path('sp-product/', include('sp_products.urls')),
+    path('watchcount/', include('watchcount.urls')),
 ]

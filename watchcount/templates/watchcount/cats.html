@@ -1,0 +1,19 @@
+{% extends 'pages/base.html' %}
+{% load static %}
+{% load humanize %}
+{% block title %}WatchCount Categories{% endblock title %}
+{% block link_tag %}
+{% endblock link_tag %}
+{% block content %}
+<div class="container">
+	<ul class="list-group">
+		{% for url,title in cats.items %}
+			<a href="{{ url }}"><li class="list-group-item">{{ title }}</li></a>
+		{% endfor %}
+	</ul>
+</div>
+{% endblock content %}
+
+{% block script_tag %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+{% endblock script_tag %}

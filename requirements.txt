@@ -92,7 +92,7 @@ texttable==0.9.1
 Twisted==17.9.0
 ufw==0.36
 unattended-upgrades==0.1
-urllib3==1.22
+urllib3==1.26.5
 virtualenv==16.5.0
 virtualenv-clone==0.5.3
 websocket-client==0.56.0
